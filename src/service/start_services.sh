@@ -1,4 +1,5 @@
 #!/bin/bash
 
 apachectl start
-python /service/app.py
+mongod --smallfiles --fork --logpath /log/mongod.log
+python ../service/app.py
