@@ -22,7 +22,7 @@ class AppTestCase(unittest.TestCase):
     def test_db(self):
         client = MongoClient('localhost', 27017)
         #test initial state of the database
-        self.assertEqual(client.database_names(), ['local'])
+        self.assertEqual(client.database_names(), ['admin', 'local'])
         #test insertion of an entry
         db = client.test_db
         collection = db.test_collection
@@ -30,14 +30,14 @@ class AppTestCase(unittest.TestCase):
         _id = collection.insert_one(entry).inserted_id
         self.assertEqual(collection.find_one({'_id': ObjectId(_id)})['text'], 'test')
         #test creation of the test database
-        self.assertEqual(client.database_names(), ['local', 'test_db'])
+        self.assertEqual(client.database_names(), ['admin', 'local', 'test_db'])
         #test removal of the entry
         collection.remove({'_id': ObjectId(_id)})
         self.assertIsNone(collection.find_one({'_id': ObjectId(_id)}))
         #test removal of the test database
         db.test_collection.drop()
         client.drop_database('test_db')
-        self.assertEqual(client.database_names(), ['local'])
+        self.assertEqual(client.database_names(), ['admin', 'local'])
 
 if __name__ == '__main__':
     if __package__ is None:
