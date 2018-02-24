@@ -28,12 +28,12 @@ class AppTestCase(unittest.TestCase):
         collection = db.test_collection
         entry = {'text' : 'test'}
         _id = collection.insert_one(entry).inserted_id
-        self.assertEqual(collection.find_one({'_id': ObjectId(id)})['text'], 'test')
+        self.assertEqual(collection.find_one({'_id': ObjectId(_id)})['text'], 'test')
         #test creation of the test database
         self.assertEqual(client.database_names(), ['local', 'test_db'])
         #test removal of the entry
         collection.remove({'_id': ObjectId(_id)})
-        self.assertIsNone(collection.find_one({'_id': ObjectId(id)}))
+        self.assertIsNone(collection.find_one({'_id': ObjectId(_id)}))
         #test removal of the test database
         db.test_collection.drop()
         client.drop_database('test_db')
