@@ -24,9 +24,9 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual(client.database_names(), ['local'])
         #test insertion of an entry
         db = client.test_db
-        collection = client.test_collection
+        collection = db.test_collection
         entry = {'text' : 'test'}
-        _id = db.insert_one(entry).inserted_id
+        _id = collection.insert_one(entry).inserted_id
         self.assertEqual(collection.find_one({'_id': ObjectId(id)})['text'], 'test')
         #test creation of the test database
         self.assertEqual(client.database_names(), ['local', 'test_db'])
