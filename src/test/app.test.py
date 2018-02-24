@@ -2,6 +2,7 @@ import json
 import unittest
 import pymongo
 from pymongo import MongoClient
+from bson import ObjectId
 
 class AppTestCase(unittest.TestCase):
 
@@ -31,7 +32,7 @@ class AppTestCase(unittest.TestCase):
         #test creation of the test database
         self.assertEqual(client.database_names(), ['local', 'test_db'])
         #test removal of the entry
-        collection.remove({'_id': ObjectId(id)})
+        collection.remove({'_id': ObjectId(_id)})
         self.assertIsNone(collection.find_one({'_id': ObjectId(id)}))
         #test removal of the test database
         db.test_collection.drop()
