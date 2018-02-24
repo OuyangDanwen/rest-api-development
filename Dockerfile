@@ -20,7 +20,7 @@ ADD ./src/service /service
 ADD ./src/html /var/www/html
 EXPOSE 80
 EXPOSE 8080
-# Expose ports.
+# Expose ports for testing from host only, remove this for deployment
 #   - 27017: process
 #   - 28017: http
 EXPOSE 27017

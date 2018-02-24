@@ -1,7 +1,7 @@
 import json
 import unittest
 import pymongo
-from pymongo import MongoClient, Connection
+from pymongo import MongoClient
 
 class AppTestCase(unittest.TestCase):
 
