@@ -21,3 +21,4 @@ def registerUser(username, email, password):
 	except ValidationError:
 		print("Invalid fields!")
 	con.close()
+	
