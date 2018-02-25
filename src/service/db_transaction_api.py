@@ -6,7 +6,7 @@ from app import bcrypt
 # Note that password salting is taken care of by the bycrypt library
 # TODO: proper exception handling
 def registerUser(username, email, password):
-	con = connect('dairy_app', host = '172.17.0.2', port =27017)
+	con = connect('dairy_app', host = 'localhost', port =27017)
 	user = User(
             username = username, 
             password = bcrypt.generate_password_hash(password),
