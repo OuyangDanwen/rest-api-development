@@ -1,4 +1,4 @@
-from mongoengine import *
+import mongoengine
 import datetime
 
 # TODO: modification required later
