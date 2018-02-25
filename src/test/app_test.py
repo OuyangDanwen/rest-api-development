@@ -23,7 +23,8 @@ class AppTestCase(unittest.TestCase):
     def test_db_setup(self):
         client = MongoClient('localhost', 27017)
         #test initial state of the database
-        self.assertEqual(client.database_names(), ['local'])
+        self.assertTrue('local' in client.database_names())
+        self.assertTrue('test_db' not in client.database_names())
         #test insertion of an entry
         db = client.test_db
         collection = db.test_collection
@@ -31,14 +32,14 @@ class AppTestCase(unittest.TestCase):
         _id = collection.insert_one(entry).inserted_id
         self.assertEqual(collection.find_one({'_id': ObjectId(_id)})['text'], 'test')
         #test creation of the test database
-        self.assertEqual(client.database_names(), ['local', 'test_db'])
+        self.assertTrue('test_db' in client.database_names())
         #test removal of the entry
         collection.remove({'_id': ObjectId(_id)})
         self.assertIsNone(collection.find_one({'_id': ObjectId(_id)}))
         #test removal of the test database
         db.test_collection.drop()
         client.drop_database('test_db')
-        self.assertEqual(client.database_names(), ['local'])
+        self.assertTrue('test_db' not in client.database_names())
         client.close()   
 
     def test_db_register_user(self):
