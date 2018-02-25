@@ -39,14 +39,14 @@ class AppTestCase(unittest.TestCase):
         client.drop_database('test_db')
         self.assertEqual(client.database_names(), ['local'])
 
-if __name__ == '__main__':
-    if __package__ is None:
-        import sys
-        from os import path
-        sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-        from service import app
-    else:
-        from ..service import app
+if __package__ is None:
+    import sys
+    from os import path
+    sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+    from service import app
+else:
+    from ..service import app
 
+if __name__ == '__main__':
     unittest.main()
 
