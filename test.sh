@@ -3,7 +3,12 @@
 # ./run.sh &
 # RUNPID=$!
 
-python src/test/*.test.py
+if [ -z ${CIRCLE_TEST_REPORTS+x} ]
+then
+    python src/test/*.py
+else
+    pytest --junitxml $CIRCLE_TEST_REPORTS/reports/src_test.xml src/test
+fi
 RESULT=$?
 
 # kill $RUNPID

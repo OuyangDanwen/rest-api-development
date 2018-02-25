@@ -52,14 +52,13 @@ class AppTestCase(unittest.TestCase):
         # no match should be found
         self.assertFalse(result)
 
+if __package__ is None:
+    import sys
+    from os import path
+    sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+    from service import app, db_transaction_api, schema
+else:
+    from ..service import app, db_transaction_api, schema
 
 if __name__ == '__main__':
-    if __package__ is None:
-        import sys
-        from os import path
-        sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-        from service import app, db_transaction_api, schema
-    else:
-        from ..service import app, db_transaction_api, schema
-
     unittest.main()
