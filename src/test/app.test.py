@@ -3,6 +3,7 @@ import unittest
 import pymongo
 from pymongo import MongoClient
 from bson import ObjectId
+from flask_mongoengine import *
 
 class AppTestCase(unittest.TestCase):
 

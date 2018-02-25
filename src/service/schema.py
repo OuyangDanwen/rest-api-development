@@ -1,4 +1,4 @@
-from mongoengine import *
+from flask_mongoengine import *
 import datetime
 
 # TODO: modification required later
