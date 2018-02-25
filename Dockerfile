@@ -5,6 +5,7 @@ RUN apt-get install -y apache2
 RUN pip install -U pip
 RUN pip install -U flask
 RUN pip install -U flask-cors
+RUN pip install -U flask-mongoengine
 RUN pip install -U pymongo
 RUN \
   apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5 && \
