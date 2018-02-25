@@ -11,6 +11,7 @@ def registerUser(username, email, password):
             username = username, 
             password = bcrypt.generate_password_hash(password),
             createdOn = datetime.datetime.now(), 
+            lastLogin = datetime.datetime.now(),
             email = email
         )
 	try:
