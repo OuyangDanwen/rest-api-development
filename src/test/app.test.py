@@ -42,7 +42,7 @@ class AppTestCase(unittest.TestCase):
         client.close()   
 
     def test_register_user(self):
-        db_transaction.registerUser('testuser', 'test@test.com', 'test')
+        db_transaction_api.registerUser('testuser', 'test@test.com', 'test')
         result = Users.objects(username = 'testuser', email = 'test@test.com')
         # one exact match should be found
         self.assertEqual(len(result), 1)
