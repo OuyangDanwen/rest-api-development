@@ -5,7 +5,7 @@ RUN apt-get install -y apache2
 RUN pip install -U pip
 RUN pip install -U flask
 RUN pip install -U flask-cors
-RUN pip install -U flask-mongoengine
+RUN pip install -U mongoengine
 RUN pip install -U pymongo
 RUN pip install -U flask-bcrypt
 RUN \
