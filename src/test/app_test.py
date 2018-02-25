@@ -16,14 +16,14 @@ class AppTestCase(unittest.TestCase):
         response = json.loads(index.get_data())
         assert response['status']
 
-if __name__ == '__main__':
-    if __package__ is None:
-        import sys
-        from os import path
-        sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-        from service import app
-    else:
-        from ..service import app
+if __package__ is None:
+    import sys
+    from os import path
+    sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+    from service import app
+else:
+    from ..service import app
 
+if __name__ == '__main__':
     unittest.main()
 
