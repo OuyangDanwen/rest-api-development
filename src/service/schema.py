@@ -8,3 +8,4 @@ class User(Document):
     password = StringField(required = True)
     createdOn = DateTimeField(required = True)
     lastLogin = DateTimeField(required = True)
+    

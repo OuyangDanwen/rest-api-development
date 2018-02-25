@@ -63,3 +63,4 @@ if __name__ == '__main__':
         from ..service import app, db_transaction_api, schema
 
     unittest.main()
+    
