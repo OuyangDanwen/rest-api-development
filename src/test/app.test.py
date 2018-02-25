@@ -43,11 +43,11 @@ class AppTestCase(unittest.TestCase):
 
     def test_register_user(self):
         db_transaction_api.registerUser('testuser', 'test@test.com', 'test')
-        result = Users.objects(username = 'testuser', email = 'test@test.com')
+        result = schema.Users.objects(username = 'testuser', email = 'test@test.com')
         # one exact match should be found
         self.assertEqual(len(result), 1)
-        Users.objects(username = 'testuser', email = 'test@test.com').delete()
-        result = Users.objects(username = 'testuser', 
+        schema.User.objects(username = 'testuser', email = 'test@test.com').delete()
+        result = schema.Users.objects(username = 'testuser', 
             password = 'test', email = 'test@test.com')
         # no match should be found
         self.assertFalse(result)
@@ -58,8 +58,8 @@ if __name__ == '__main__':
         import sys
         from os import path
         sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-        from service import app, db_transaction_api
+        from service import app, db_transaction_api, schema
     else:
-        from ..service import app, db_transaction_api
+        from ..service import app, db_transaction_api, schema
 
     unittest.main()
