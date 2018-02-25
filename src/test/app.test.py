@@ -31,18 +31,18 @@ class AppTestCase(unittest.TestCase):
         _id = collection.insert_one(entry).inserted_id
         self.assertEqual(collection.find_one({'_id': ObjectId(_id)})['text'], 'test')
         #test creation of the test database
-        self.assertEqual(client.database_names(), ['admin', 'local', 'test_db'])
+        self.assertEqual(client.database_names(), ['local', 'test_db'])
         #test removal of the entry
         collection.remove({'_id': ObjectId(_id)})
         self.assertIsNone(collection.find_one({'_id': ObjectId(_id)}))
         #test removal of the test database
         db.test_collection.drop()
         client.drop_database('test_db')
-        self.assertEqual(client.database_names(), ['admin', 'local'])
+        self.assertEqual(client.database_names(), ['local'])
         client.close()   
 
     def test_register_user(self):
-        register_user("testuser", "test", "test@test.com")
+        registerUser("testuser", "test", "test@test.com")
         result = Users.objects(username = testuser, email = "test@test.com")
         # one exact match should be found
         self.assertEqual(len(result), 1)
