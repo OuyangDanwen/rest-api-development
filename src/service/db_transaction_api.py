@@ -19,4 +19,4 @@ def registerUser(username, email, password):
 		print("Duplicates detected!")
 	except ValidationError:
 		print("Invalid fields!")
-	con.disconnect()
+	con.close()
