@@ -3,7 +3,6 @@ import unittest
 import pymongo
 from pymongo import MongoClient
 from bson import ObjectId
-from mongoengine import *
 
 class AppTestCase(unittest.TestCase):
 
