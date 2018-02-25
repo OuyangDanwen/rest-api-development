@@ -43,11 +43,11 @@ class AppTestCase(unittest.TestCase):
 
     def test_register_user(self):
         db_transaction_api.registerUser('testuser', 'test@test.com', 'test')
-        result = schema.Users.objects(username = 'testuser', email = 'test@test.com')
+        result = schema.User.objects(username = 'testuser', email = 'test@test.com')
         # one exact match should be found
         self.assertEqual(len(result), 1)
         schema.User.objects(username = 'testuser', email = 'test@test.com').delete()
-        result = schema.Users.objects(username = 'testuser', 
+        result = schema.User.objects(username = 'testuser', 
             password = 'test', email = 'test@test.com')
         # no match should be found
         self.assertFalse(result)

@@ -9,7 +9,7 @@ def registerUser(username, email, password):
 	con = connect('dairy_app', host = '172.17.0.2', port =27017)
 	user = User(
             username = username, 
-            password = bycrypt.generate_password_hash(password),
+            password = bcrypt.generate_password_hash(password),
             createdOn = datetime.datetime.now(), 
             email = email
         )
