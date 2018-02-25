@@ -3,7 +3,6 @@ import unittest
 import pymongo
 from pymongo import MongoClient
 from bson import ObjectId
-from schema import User
 from mongoengine import *
 
 class AppTestCase(unittest.TestCase):
@@ -59,8 +58,8 @@ if __name__ == '__main__':
         import sys
         from os import path
         sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-        from service import app, db_transaction_api
+        from service import app, db_transaction_api, schema
     else:
-        from ..service import app, db_transaction_api
+        from ..service import app, db_transaction_api, schema
 
     unittest.main()
