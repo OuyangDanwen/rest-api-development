@@ -4,10 +4,15 @@ from flask import Flask
 from flask_cors import CORS
 import json
 import os
+import pymongo
+from mongoengine import connect
+from db_transaction_api import *
 
 app = Flask(__name__)
 # Enable cross origin sharing for all endpoints
 CORS(app)
+connect('dairy_app', host = '172.17.0.2', port =27017)
+
 
 # Remember to update this list
 ENDPOINT_LIST = ['/', '/meta/heartbeat', '/meta/members']
