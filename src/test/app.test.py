@@ -23,7 +23,7 @@ class AppTestCase(unittest.TestCase):
     def test_db_setup(self):
         client = MongoClient('localhost', 27017)
         #test initial state of the database
-        self.assertEqual(client.database_names(), ['admin', 'local'])
+        self.assertEqual(client.database_names(), ['local'])
         #test insertion of an entry
         db = client.test_db
         collection = db.test_collection
@@ -59,7 +59,9 @@ if __name__ == '__main__':
         from os import path
         sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
         from service import app, db_transaction_api, schema
+        from db_transaction_api import *
     else:
         from ..service import app, db_transaction_api, schema
+        from db_transaction_api import *
 
     unittest.main()
