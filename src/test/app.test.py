@@ -3,6 +3,9 @@ import unittest
 import pymongo
 from pymongo import MongoClient
 from bson import ObjectId
+from ..service import db_transaction_api
+from schema import *
+from mongoengine import *
 
 class AppTestCase(unittest.TestCase):
 
@@ -40,6 +43,18 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual(client.database_names(), ['admin', 'local'])
         client.close()   
 
+    def test_register_user(self):
+        register_user("testuser", "test", "test@test.com")
+        result = Users.objects(username = testuser, email = "test@test.com")
+        # one exact match should be found
+        self.assertEqual(len(result), 1)
+        Users.objects(username = testuser, email = "test@test.com").delete()
+        result = Users.objects(username = testuser, 
+            password = "test", email = "test@test.com")
+        # no match should be found
+        self.assertFalse(result)
+
+
 if __name__ == '__main__':
     if __package__ is None:
         import sys
@@ -50,4 +65,3 @@ if __name__ == '__main__':
         from ..service import app
 
     unittest.main()
-
