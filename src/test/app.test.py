@@ -19,7 +19,7 @@ class AppTestCase(unittest.TestCase):
         response = json.loads(index.get_data())
         assert response['status']
 
-    def test_db(self):
+    def test_db_setup(self):
         client = MongoClient('localhost', 27017)
         #test initial state of the database
         self.assertEqual(client.database_names(), ['admin', 'local'])
@@ -38,6 +38,7 @@ class AppTestCase(unittest.TestCase):
         db.test_collection.drop()
         client.drop_database('test_db')
         self.assertEqual(client.database_names(), ['admin', 'local'])
+        client.close()   
 
 if __name__ == '__main__':
     if __package__ is None:
