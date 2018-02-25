@@ -3,7 +3,7 @@ import unittest
 import pymongo
 from pymongo import MongoClient
 from bson import ObjectId
-from mongoengine import *
+import mongoengine
 
 class AppTestCase(unittest.TestCase):
 
@@ -23,7 +23,8 @@ class AppTestCase(unittest.TestCase):
     def test_db_setup(self):
         client = MongoClient('localhost', 27017)
         #test initial state of the database
-        self.assertEqual(client.database_names(), ['local'])
+        self.assertTrue('local' in client.database_names())
+        self.assertTrue('test_db' not in client.database_names())
         #test insertion of an entry
         db = client.test_db
         collection = db.test_collection
@@ -31,17 +32,17 @@ class AppTestCase(unittest.TestCase):
         _id = collection.insert_one(entry).inserted_id
         self.assertEqual(collection.find_one({'_id': ObjectId(_id)})['text'], 'test')
         #test creation of the test database
-        self.assertEqual(client.database_names(), ['local', 'test_db'])
+        self.assertTrue('test_db' in client.database_names())
         #test removal of the entry
         collection.remove({'_id': ObjectId(_id)})
         self.assertIsNone(collection.find_one({'_id': ObjectId(_id)}))
         #test removal of the test database
         db.test_collection.drop()
         client.drop_database('test_db')
-        self.assertEqual(client.database_names(), ['local'])
+        self.assertTrue('test_db' not in client.database_names())
         client.close()   
 
-    def test_register_user(self):
+    def test_db_register_user(self):
         db_transaction_api.registerUser('testuser', 'test@test.com', 'test')
         result = schema.User.objects(username = 'testuser', email = 'test@test.com')
         # one exact match should be found
@@ -52,15 +53,13 @@ class AppTestCase(unittest.TestCase):
         # no match should be found
         self.assertFalse(result)
 
+if __package__ is None:
+    import sys
+    from os import path
+    sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+    from service import app, db_transaction_api, schema
+else:
+    from ..service import app, db_transaction_api, schema
 
 if __name__ == '__main__':
-    if __package__ is None:
-        import sys
-        from os import path
-        sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-        from service import app, db_transaction_api, schema
-    else:
-        from ..service import app, db_transaction_api, schema
-
     unittest.main()
-    
