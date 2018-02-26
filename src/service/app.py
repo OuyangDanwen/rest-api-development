@@ -7,7 +7,7 @@ import json
 import os
 
 from db_transaction_api import Db
-import schema
+import schema, config
 
 app = Flask(__name__)
 # Enable cross origin sharing for all endpoints
@@ -148,4 +148,4 @@ if __name__ == '__main__':
     os.chdir(dname)
 
     # Run the application
-    app.run(debug=True, port=8080, host="0.0.0.0")
+    app.run(debug=config.debug, port=8080, host="0.0.0.0")
