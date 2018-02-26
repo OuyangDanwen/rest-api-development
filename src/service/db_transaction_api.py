@@ -5,7 +5,7 @@ from app import bcrypt
 
 # Note that password salting is taken care of by the bycrypt library
 # TODO: proper exception handling
-def registerUser(username, fullname, password):
+def registerUser(username, fullname, password, age):
     con = mongoengine.connect('diary_app', host = 'localhost', port = 27017)
     user = schema.User(
         username = username, 
@@ -13,6 +13,7 @@ def registerUser(username, fullname, password):
         password = bcrypt.generate_password_hash(password),
         createdOn = datetime.datetime.now(), 
         lastLogin = datetime.datetime.now(),
+        age = age
         )
     try:
         user.save()

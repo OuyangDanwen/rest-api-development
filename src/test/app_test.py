@@ -43,18 +43,18 @@ class AppTestCase(unittest.TestCase):
         client.close()   
 
     def test_db_register_user(self):
-        db_transaction_api.registerUser('testuser', 'testuser', 'test')
-        result = schema.User.objects(username = 'testuser', fullname = 'testuser')
+        db_transaction_api.registerUser('testuser', 'testuser', 'test', 20)
+        result = schema.User.objects(username = 'testuser', fullname = 'testuser', age = 20)
         # one exact match should be found
         self.assertEqual(len(result), 1)
-        schema.User.objects(username = 'testuser', fullname = 'testuser').delete()
-        result = schema.User.objects(username = 'testuser', fullname = 'testuser')
+        schema.User.objects(username = 'testuser', fullname = 'testuser', age = 20).delete()
+        result = schema.User.objects(username = 'testuser', fullname = 'testuser', age = 20)
         # no match should be found
         self.assertFalse(result)
 
     def test_db_insert_post(self):
-        db_transaction_api.registerUser('testuser', 'testuser', 'test')
-        user = schema.User.objects(username = 'testuser', fullname = 'testuser')[0]
+        db_transaction_api.registerUser('testuser', 'testuser', 'test', 20)
+        user = schema.User.objects(username = 'testuser', fullname = 'testuser', age = 20)[0]
         db_transaction_api.insertPost(user, "test", True, "this is a test post")
         result = schema.Post.objects(author = user, isPublc = True, 
             title = "test", text = "this is a test post")
@@ -66,7 +66,7 @@ class AppTestCase(unittest.TestCase):
             title = "test", text = "this is a test post")
         # no match should be found
         self.assertFalse(result)
-        schema.User.objects(username = 'testuser', fullname = 'testuser').delete()
+        schema.User.objects(username = 'testuser', fullname = 'testuser', age = 20).delete()
 
 if __package__ is None:
     import sys
