@@ -23,6 +23,8 @@ def new_app_route_decorator(endpoint, **kwargs):
     return default_app_route_decorator(endpoint, **kwargs)
 default_app_route_decorator, app.route = app.route, new_app_route_decorator
 
+TEAM_MEMBERS = ["Ngo Kim Phu", "Choo Rui Bin", "Ouyang Danwen", "Chai Wai Aik Zander"]
+
 def make_json_response(data, status=True, resource={}, code=200):
     """Utility function to create the JSON responses."""
     to_serialize = dict(resource)
