@@ -2,12 +2,14 @@
 
 from flask import Flask, request
 from flask_cors import CORS
+from flask_bcrypt import Bcrypt
 import json
 import os
 
 app = Flask(__name__)
 # Enable cross origin sharing for all endpoints
 CORS(app)
+bcrypt = Bcrypt(app)
 
 # Remember to update this list
 ENDPOINT_LIST = ['/', '/meta/heartbeat', '/meta/members', '/users', '/users/register', '/users/authenticate', '/users/expire']
