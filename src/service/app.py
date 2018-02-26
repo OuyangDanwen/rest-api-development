@@ -13,6 +13,7 @@ app = Flask(__name__)
 # Enable cross origin sharing for all endpoints
 CORS(app)
 bcrypt = Bcrypt(app)
+setattr(app, 'bcrypt', bcrypt)
 
 # Get the endpoint list from all the @app.route calls
 ENDPOINT_LIST = []

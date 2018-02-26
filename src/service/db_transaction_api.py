@@ -1,7 +1,8 @@
 from datetime import datetime
 import mongoengine
-import schema
 import uuid
+
+import schema
 
 # Only use this class with `with` as in `with Db(...) as db`
 class Db:
