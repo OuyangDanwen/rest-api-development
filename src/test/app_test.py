@@ -25,7 +25,7 @@ class AppTestCase(unittest.TestCase):
         assert response['status']
 
     def test_db_setup(self):
-        client = MongoClient('localhost', 27017)
+        client = MongoClient(config.db_host, config.db_port)
         #test initial state of the database
         try:
             self.assertIn('local', client.database_names())
@@ -81,9 +81,9 @@ if __package__ is None:
     import sys
     from os import path
     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-    from service import app, db_transaction_api, schema
+    from service import app, db_transaction_api, schema, config
 else:
-    from ..service import app, db_transaction_api, schema
+    from ..service import app, db_transaction_api, schema, config
 Db = db_transaction_api.Db
 
 if __name__ == '__main__':

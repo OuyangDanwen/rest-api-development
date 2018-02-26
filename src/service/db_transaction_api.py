@@ -3,10 +3,11 @@ import mongoengine
 import uuid
 
 import schema
+import config
 
 # Only use this class with `with` as in `with Db(...) as db`
 class Db:
-    def __init__(self, app, db='diary', host='localhost', port=27017):
+    def __init__(self, app, host=config.db_host, port=config.db_port, db=config.db_db):
         self.dbconfig = locals()
         self.app = app
         del self.dbconfig['self'], self.dbconfig['app']
