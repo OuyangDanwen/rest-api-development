@@ -25,7 +25,7 @@ default_app_route_decorator, app.route = app.route, new_app_route_decorator
 
 TEAM_MEMBERS = ["Ngo Kim Phu", "Choo Rui Bin", "Ouyang Danwen", "Chai Wai Aik Zander"]
 
-def make_json_response(data, status=True, resource={}, code=200):
+def make_json_response(data=None, status=True, resource={}, code=200):
     """Utility function to create the JSON responses."""
     to_serialize = dict(resource)
     to_serialize['status'] = status
@@ -53,40 +53,57 @@ def meta_heartbeat():
 @app.route("/meta/members")
 def meta_members():
     """Returns a list of team members"""
-    with open("./team_members.txt") as f:
-        team_members = f.read().strip().split("\n")
-    return make_json_response(team_members)
+    return make_json_response(TEAM_MEMBERS)
 
 @app.route("/users", methods=['POST'])
 def users():
     """Retrieve user information"""
     with Db(app) as db:
-        users = db.validateToken(request.get_json()['token'])
-        if users:
-            return make_json_response(None, True, users[0])
+        try:
+            user = db.validateToken(request.get_json()['token'])
+            if user:
+                return make_json_response(None, True, {field: user[field] for field in ["username", "fullname", "age"]})
+        except KeyError:
+            pass
         return make_json_response('Invalid authentication token.', False)
 
 @app.route("/users/register", methods=['POST'])
 def users_register():
     """Register a user"""
     user = request.get_json()
-    if user["username"] == "testuser":
-        return make_json_response("User already exists!", False)
-    return make_json_response(None)
+    if user:
+        with Db(app) as db:
+            newUser = db.registerUser(**user)
+            if newUser:
+                return make_json_response(code=201)
+            if newUser is not None:
+                return make_json_response("User already exists!", False)
+    return make_json_response("Wrong field(s)", False, code=400)
 
 @app.route("/users/authenticate", methods=['POST'])
 def users_authenticate():
     """Authenticate a user"""
-    body = request.get_json()
-    if not body["username"]:
-        return make_json_response(None, False)
-    return make_json_response(None, True, {"token": "6bf00d02-dffc-4849-a635-a21b08500d61"})
+    user = request.get_json()
+    if user:
+        try:
+            with Db(app) as db:
+                token = db.generateToken(**user)
+                if token:
+                    return make_json_response(None, True, {'token': str(token)})
+                return make_json_response(None, False)
+        except KeyError, TypeError:
+            pass
+    return make_json_response("Wrong field(s)", False, code=400)
 
 @app.route("/users/expire", methods=['POST'])
 def users_expire():
     """Expire an authentication token"""
-    token = request.get_json()['token']
-    return make_json_response(None, not token)
+    with Db(app) as db:
+        try:
+            tokenDeleted = db.deleteToken(request.get_json()['token'])
+        except KeyError:
+            tokenDeleted = False
+        return make_json_response(None, tokenDeleted)
 
 @app.route("/diary", methods=['GET', 'POST'])
 def diary():
