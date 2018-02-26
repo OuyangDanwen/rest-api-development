@@ -57,7 +57,7 @@ def meta_members():
 @app.route("/users", methods=['POST'])
 def users():
     """Retrieve user information"""
-    with Db() as db:
+    with Db(app) as db:
         token = request.get_json()['token']
         if not token:
             return make_json_response('Invalid authentication token.', False)

@@ -20,3 +20,6 @@ class Post(Document):
 class Session(Document):
 	user = ReferenceField(User)
 	token = UUIDField(required = True)
+
+class Counter(Document):
+	value = IntField(required = True)
