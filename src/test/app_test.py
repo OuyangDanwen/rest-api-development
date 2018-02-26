@@ -43,7 +43,7 @@ class AppTestCase(unittest.TestCase):
         client.close()
 
     def test_db_register_user(self):
-        with Db() as db:
+        with Db(self.app) as db:
             db.registerUser('testuser', 'testuser', 'test', 20)
             result = schema.User.objects(username = 'testuser', fullname = 'testuser', age = 20)
             # one exact match should be found
@@ -54,7 +54,7 @@ class AppTestCase(unittest.TestCase):
             self.assertFalse(result)
 
     def test_db_insert_post(self):
-        with Db() as db:
+        with Db(self.app) as db:
             db.registerUser('testuser', 'testuser', 'test', 20)
             user = schema.User.objects(username = 'testuser', fullname = 'testuser', age = 20)[0]
             db_transaction_api.insertPost(user, "test", True, "this is a test post")

@@ -61,11 +61,10 @@ def meta_members():
 def users():
     """Retrieve user information"""
     with Db(app) as db:
-        token = request.get_json()['token']
-        if not token:
-            return make_json_response('Invalid authentication token.', False)
-        user = {"username": "testuser", "fullname": "testname", "age": 0}
-        return make_json_response(None, True, user)
+        users = db.validateToken(request.get_json()['token'])
+        if users:
+            return make_json_response(None, True, users[0])
+        return make_json_response('Invalid authentication token.', False)
 
 @app.route("/users/register", methods=['POST'])
 def users_register():
@@ -132,4 +131,4 @@ if __name__ == '__main__':
     os.chdir(dname)
 
     # Run the application
-    app.run(debug=False, port=8080, host="0.0.0.0")
+    app.run(debug=True, port=8080, host="0.0.0.0")
