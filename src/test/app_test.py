@@ -40,33 +40,35 @@ class AppTestCase(unittest.TestCase):
         db.test_collection.drop()
         client.drop_database('test_db')
         self.assertTrue('test_db' not in client.database_names())
-        client.close()   
+        client.close()
 
     def test_db_register_user(self):
-        db_transaction_api.registerUser('testuser', 'testuser', 'test', 20)
-        result = schema.User.objects(username = 'testuser', fullname = 'testuser', age = 20)
-        # one exact match should be found
-        self.assertEqual(len(result), 1)
-        schema.User.objects(username = 'testuser', fullname = 'testuser', age = 20).delete()
-        result = schema.User.objects(username = 'testuser', fullname = 'testuser', age = 20)
-        # no match should be found
-        self.assertFalse(result)
+        with Db() as db:
+            db.registerUser('testuser', 'testuser', 'test', 20)
+            result = schema.User.objects(username = 'testuser', fullname = 'testuser', age = 20)
+            # one exact match should be found
+            self.assertEqual(len(result), 1)
+            schema.User.objects(username = 'testuser', fullname = 'testuser', age = 20).delete()
+            result = schema.User.objects(username = 'testuser', fullname = 'testuser', age = 20)
+            # no match should be found
+            self.assertFalse(result)
 
     def test_db_insert_post(self):
-        db_transaction_api.registerUser('testuser', 'testuser', 'test', 20)
-        user = schema.User.objects(username = 'testuser', fullname = 'testuser', age = 20)[0]
-        db_transaction_api.insertPost(user, "test", True, "this is a test post")
-        result = schema.Post.objects(author = user, isPublic = True, 
-            title = "test", text = "this is a test post")
-        # one exact match should be found
-        self.assertEqual(len(result), 1)
-        schema.Post.objects(author = user, isPublic = True, 
-            title = "test", text = "this is a test post").delete()
-        result = schema.Post.objects(author = user, isPublic = True, 
-            title = "test", text = "this is a test post")
-        # no match should be found
-        self.assertFalse(result)
-        schema.User.objects(username = 'testuser', fullname = 'testuser', age = 20).delete()
+        with Db() as db:
+            db.registerUser('testuser', 'testuser', 'test', 20)
+            user = schema.User.objects(username = 'testuser', fullname = 'testuser', age = 20)[0]
+            db_transaction_api.insertPost(user, "test", True, "this is a test post")
+            result = schema.Post.objects(author = user, isPublic = True,
+                title = "test", text = "this is a test post")
+            # one exact match should be found
+            self.assertEqual(len(result), 1)
+            schema.Post.objects(author = user, isPublic = True,
+                title = "test", text = "this is a test post").delete()
+            result = schema.Post.objects(author = user, isPublic = True,
+                title = "test", text = "this is a test post")
+            # no match should be found
+            self.assertFalse(result)
+            schema.User.objects(username = 'testuser', fullname = 'testuser', age = 20).delete()
 
 if __package__ is None:
     import sys
@@ -75,6 +77,7 @@ if __package__ is None:
     from service import app, db_transaction_api, schema
 else:
     from ..service import app, db_transaction_api, schema
+Db = db_transaction_api.Db
 
 if __name__ == '__main__':
     unittest.main()

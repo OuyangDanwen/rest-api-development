@@ -6,13 +6,21 @@ from flask_bcrypt import Bcrypt
 import json
 import os
 
+from db_transaction_api import Db
+import schema
+
 app = Flask(__name__)
 # Enable cross origin sharing for all endpoints
 CORS(app)
 bcrypt = Bcrypt(app)
 
-# Remember to update this list
-ENDPOINT_LIST = ['/', '/meta/heartbeat', '/meta/members', '/users', '/users/register', '/users/authenticate', '/users/expire']
+# Get the endpoint list from all the @app.route calls
+ENDPOINT_LIST = []
+def new_app_route_decorator(endpoint, **kwargs):
+    global ENDPOINT_LIST
+    ENDPOINT_LIST.append(endpoint)
+    return default_app_route_decorator(endpoint, **kwargs)
+default_app_route_decorator, app.route = app.route, new_app_route_decorator
 
 def make_json_response(data, status=True, resource={}, code=200):
     """Utility function to create the JSON responses."""
@@ -49,11 +57,12 @@ def meta_members():
 @app.route("/users", methods=['POST'])
 def users():
     """Retrieve user information"""
-    token = request.get_json()['token']
-    if not token:
-        return make_json_response('Invalid authentication token.', False)
-    user = {"username": "testuser", "fullname": "testname", "age": 0}
-    return make_json_response(None, True, user)
+    with Db() as db:
+        token = request.get_json()['token']
+        if not token:
+            return make_json_response('Invalid authentication token.', False)
+        user = {"username": "testuser", "fullname": "testname", "age": 0}
+        return make_json_response(None, True, user)
 
 @app.route("/users/register", methods=['POST'])
 def users_register():
