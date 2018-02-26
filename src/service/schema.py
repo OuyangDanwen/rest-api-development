@@ -16,3 +16,7 @@ class Post(Document):
 	publishDate = DateTimeField(required = True)
 	isPublic = BooleanField(required = True)
 	text = StringField(required = True)
+
+class Session(Document):
+	user = ReferenceField(User)
+	token = UUIDField(required = True)
