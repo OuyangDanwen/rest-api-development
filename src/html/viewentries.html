@@ -5,12 +5,13 @@
     <meta charset="utf-8">
 
     <title>View Entries</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
     <link rel="stylesheet" href="css/bootstrap.min.css" id="bootstrap-css">
     <link href="css/sidebar.css" rel="stylesheet">
     <link href="css/home.css" rel="stylesheet">
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/common.js"></script>
 
 </head>
 
@@ -37,14 +38,17 @@
                         <td>Sample entry</td>
                         <td>John Doe</td>
                         <td>2018-02-30</td>
-                        <td><button class="btn btn-circle"><i class="fa fa-file-text-o"></i></button></td>
+                        <td>
+                            <button class="btn btn-circle"><i class="far fa-file-alt"></i></button>
+                            <button class="btn btn-circle" id="deleteBtn" hidden="true"><i class="far fa-trash-alt"></i></button>
+                        </td>
                     </tr>
                     <tr>
                         <td>2</td>
                         <td>Sample entry</td>
                         <td>Jane Doo</td>
                         <td>2018-02-31</td>
-                        <td><button class="btn btn-circle"><i class="fa fa-file-text-o"></i></button></td>
+                        <td><button class="btn btn-circle"><i class="far fa-file-alt"></i></button></td>
                     </tr>
                 </table>
             </div>
@@ -52,11 +56,15 @@
 
     </div>
 
-
     <script>
 
-        $(function() {
+        $(document).ready(function() {
             $('#sidebar').load("sidebar.html");
+            
+            if (getUrlParameter("group") === "self") {
+                $('#deleteBtn').show();
+            }
+
         });
 
     </script>
