@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>View Entries</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css" id="bootstrap-css">
+    <link href="css/sidebar.css" rel="stylesheet">
+    <link href="css/home.css" rel="stylesheet">
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <div id="sidebar"></div>
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <h1>View entries</h1><br>
+                <table class="table table-hover">
+                    <thead class="thead-light">
+                        <th style="width: 5%">#</th>
+                        <th style="width: 35%">Title</th>
+                        <th style="width: 25%">Author</th>
+                        <th style="width: 25%">Publish Date</th>
+                        <th style="width: 10%">Actions</th>
+                    </thead>
+                    <tr>
+                        <td>1</td>
+                        <td>Sample entry</td>
+                        <td>John Doe</td>
+                        <td>2018-02-30</td>
+                        <td><button class="btn btn-circle"><i class="fa fa-file-text-o"></i></button></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Sample entry</td>
+                        <td>Jane Doo</td>
+                        <td>2018-02-31</td>
+                        <td><button class="btn btn-circle"><i class="fa fa-file-text-o"></i></button></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script>
+
+        $(function() {
+            $('#sidebar').load("sidebar.html");
+        });
+
+    </script>
+
+</body>
+
+</html>
