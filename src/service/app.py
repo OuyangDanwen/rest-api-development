@@ -71,11 +71,14 @@ def users_register():
     user = request.get_json()
     if user:
         with Db(app) as db:
-            newUser = db.registerUser(**user)
-            if newUser:
-                return make_json_response(code=201)
-            if newUser is not None:
-                return make_json_response("User already exists!", False)
+            try:
+                newUser = db.registerUser(**user)
+                if newUser:
+                    return make_json_response(code=201)
+                if newUser is not None:
+                    return make_json_response("User already exists!", False)
+            except KeyError:
+                pass
     return make_json_response("Wrong field(s)", False, code=400)
 
 @app.route("/users/authenticate", methods=['POST'])
