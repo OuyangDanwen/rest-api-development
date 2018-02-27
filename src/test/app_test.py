@@ -181,17 +181,171 @@ class AppTestCase(unittest.TestCase):
         self.assertFalse(response['status'])
 
     def test_diary(self):
-        pass
+        testUsername = self.testUsername + '-diary'
+        testUsernam2 = self.testUsername + '-diar2'
+        # Register new users
+        body = {"username": testUsername, "password": "pass", "fullname": "Peter Test", "age": 20}
+        users_register = self.app.post('/users/register', json=body)
+        self.assertEqual(users_register.status_code, 201)
+        bod2 = {"username": testUsernam2, "password": "pass", "fullname": "Peter Tes2", "age": 20}
+        users_register = self.app.post('/users/register', json=bod2)
+        self.assertEqual(users_register.status_code, 201)
+        # Authenticate the registered users
+        users_authenticate = self.app.post('/users/authenticate', json=body)
+        self.assertEqual(users_authenticate.status_code, 200)
+        response = json.loads(users_authenticate.get_data())
+        self.assertTrue(response.has_key('token'))
+        token = response['token']
 
-    def test_diary_create(self):
-        pass
+        users_authenticate = self.app.post('/users/authenticate', json=bod2)
+        self.assertEqual(users_authenticate.status_code, 200)
+        response = json.loads(users_authenticate.get_data())
+        self.assertTrue(response.has_key('token'))
+        toke2 = response['token']
+        # Create new diary entries
+        body = {"token": token, "title": testUsername, "public": True, "text": "Test"}
+        diary_create = self.app.post('/diary/create', json=body)
+        self.assertEqual(diary_create.status_code, 201)
+        response = json.loads(diary_create.get_data())
+        self.assertTrue(response.has_key('status'))
+        self.assertTrue(response['status'])
+        self.assertTrue(response.has_key('result'))
+        entryId = response['result']
 
-    def test_diary_delete(self):
-        pass
+        bod2 = {"token": toke2, "title": testUsernam2, "public": False, "text": "Tes2"}
+        diary_create = self.app.post('/diary/create', json=bod2)
+        self.assertEqual(diary_create.status_code, 201)
+        response = json.loads(diary_create.get_data())
+        self.assertTrue(response.has_key('status'))
+        self.assertTrue(response['status'])
+        self.assertTrue(response.has_key('result'))
+        entryI2 = response['result']
+        # Retrieve all public diary entries
+        diary = self.app.get('/diary')
+        self.assertEqual(diary.status_code, 200)
+        response = json.loads(diary.get_data())
+        self.assertTrue(response.has_key('status'))
+        self.assertTrue(response['status'])
+        self.assertTrue(response.has_key('result'))
+        self.assertIsInstance(response['result'], list)
+        self.assertEqual(len(response['result']), 1)
 
-    def test_diary_permission(self):
-        pass
+        entry = response['result'][0]
+        self.assertEqual(entry["id"], entryId)
+        self.assertEqual(entry["title"], testUsername)
+        self.assertEqual(entry["author"], testUsername)
+        self.assertIsInstance(entry["publish_date"], basestring)
+        self.assertLess(entry["publish_date"], datetime.now().isoformat())
+        self.assertTrue(entry["public"])
+        self.assertEqual(entry["text"], "Test")
+        # Retrieve all of user 2's diary entries
+        diary = self.app.post('/diary', json=bod2)
+        self.assertEqual(diary.status_code, 200)
+        response = json.loads(diary.get_data())
+        self.assertTrue(response.has_key('status'))
+        self.assertTrue(response['status'])
+        self.assertTrue(response.has_key('result'))
+        self.assertIsInstance(response['result'], list)
+        self.assertEqual(len(response['result']), 1)
 
+        entry = response['result'][0]
+        self.assertEqual(entry["id"], entryI2)
+        self.assertEqual(entry["title"], testUsernam2)
+        self.assertEqual(entry["author"], testUsernam2)
+        self.assertIsInstance(entry["publish_date"], basestring)
+        self.assertLess(entry["publish_date"], datetime.now().isoformat())
+        self.assertFalse(entry["public"])
+        self.assertEqual(entry["text"], "Tes2")
+        # Adjust users' diary permission
+        bod2['id'] = entryI2
+        bod2['public'] = True
+        diary_permission = self.app.post('/diary/permission', json=bod2)
+        self.assertEqual(diary.status_code, 200)
+        response = json.loads(diary.get_data())
+        self.assertTrue(response.has_key('status'))
+        self.assertTrue(response['status'])
+
+        diary = self.app.get('/diary')
+        self.assertEqual(diary.status_code, 200)
+        response = json.loads(diary.get_data())
+        self.assertTrue(response.has_key('status'))
+        self.assertTrue(response['status'])
+        self.assertTrue(response.has_key('result'))
+        self.assertIsInstance(response['result'], list)
+        self.assertEqual(len(response['result']), 2)
+
+        body['id'] = entryId
+        body['public'] = False
+        diary_permission = self.app.post('/diary/permission', json=body)
+        self.assertEqual(diary_permission.status_code, 200)
+        response = json.loads(diary_permission.get_data())
+        self.assertTrue(response.has_key('status'))
+        self.assertTrue(response['status'])
+
+        diary = self.app.get('/diary')
+        self.assertEqual(diary.status_code, 200)
+        response = json.loads(diary.get_data())
+        self.assertTrue(response.has_key('status'))
+        self.assertTrue(response['status'])
+        self.assertTrue(response.has_key('result'))
+        self.assertIsInstance(response['result'], list)
+        self.assertEqual(len(response['result']), 1)
+        # Adjust other user's diary permission
+        bodyOther = {"token": token, "id": entryI2, "public": True}
+        diary_permission = self.app.post('/diary/permission', json=bodyOther)
+        self.assertEqual(diary_permission.status_code, 200)
+        response = json.loads(diary_permission.get_data())
+        self.assertTrue(response.has_key('status'))
+        self.assertFalse(response['status'])
+        # Delete the only public diary entry left
+        diary_delete = self.app.post('/diary/delete', json=bod2)
+        self.assertEqual(diary_delete.status_code, 200)
+        response = json.loads(diary_delete.get_data())
+        self.assertTrue(response.has_key('status'))
+        self.assertTrue(response['status'])
+
+        diary = self.app.get('/diary')
+        self.assertEqual(diary.status_code, 200)
+        response = json.loads(diary.get_data())
+        self.assertTrue(response.has_key('status'))
+        self.assertTrue(response['status'])
+        self.assertTrue(response.has_key('result'))
+        self.assertIsInstance(response['result'], list)
+        self.assertEqual(len(response['result']), 0)
+        # Delete other user's entry
+        diary_delete = self.app.post('/diary/delete', json=bodyOther)
+        self.assertEqual(diary_delete.status_code, 200)
+        response = json.loads(diary_delete.get_data())
+        self.assertTrue(response.has_key('status'))
+        self.assertFalse(response['status'])
+
+    def test_diary_bogus(self):
+        body = {"token": "bogus", "id": -1, "title": "Bogus", "public": True, "text": "Test"}
+        diary_create = self.app.post('/diary/create', json=body)
+        self.assertEqual(diary_create.status_code, 200)
+        response = json.loads(diary_create.get_data())
+        self.assertTrue(response.has_key('status'))
+        self.assertFalse(response['status'])
+        self.assertFalse(response.has_key('result'))
+
+        diary = self.app.post('/diary', json=body)
+        self.assertEqual(diary.status_code, 200)
+        response = json.loads(diary.get_data())
+        self.assertTrue(response.has_key('status'))
+        self.assertFalse(response['status'])
+        self.assertFalse(response.has_key('result'))
+
+        diary_permission = self.app.post('/diary/permission', json=body)
+        self.assertEqual(diary_permission.status_code, 200)
+        response = json.loads(diary_permission.get_data())
+        self.assertTrue(response.has_key('status'))
+        self.assertFalse(response['status'])
+
+        diary_delete = self.app.post('/diary/delete', json=body)
+        self.assertEqual(diary_delete.status_code, 200)
+        response = json.loads(diary_delete.get_data())
+        self.assertTrue(response.has_key('status'))
+        self.assertFalse(response['status'])
 
 if __package__ is None:
     import sys
