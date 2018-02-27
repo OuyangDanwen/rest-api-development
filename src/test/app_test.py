@@ -67,13 +67,13 @@ class AppTestCase(unittest.TestCase):
             db.registerUser(username = self.testUsername, fullname = 'testuser', password = 'test', age = 20)
             user = schema.User.objects(username = self.testUsername, fullname = 'testuser', age = 20)[0]
             db.insertPost(user, self.testUsername, True, "this is a test post")
-            result = schema.Post.objects(author = user, isPublic = True,
+            result = schema.Post.objects(author = user, public = True,
                 title = self.testUsername, text = "this is a test post")
             # one exact match should be found
             self.assertEqual(len(result), 1)
-            schema.Post.objects(author = user, isPublic = True,
+            schema.Post.objects(author = user, public = True,
                 title = self.testUsername, text = "this is a test post").delete()
-            result = schema.Post.objects(author = user, isPublic = True,
+            result = schema.Post.objects(author = user, public = True,
                 title = self.testUsername, text = "this is a test post")
             # no match should be found
             self.assertFalse(result)

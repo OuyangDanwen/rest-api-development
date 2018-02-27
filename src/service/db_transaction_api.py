@@ -22,11 +22,7 @@ class Db:
     # Password salted-hashing is taken care of by the bcrypt library
     def registerUser(self, **values):
         values['password'] = self.app.bcrypt.generate_password_hash(values['password'])
-        user = schema.User(
-            createdOn = datetime.now(),
-            lastLogin = datetime.now(),
-            **values
-        )
+        user = schema.User(**values)
         try:
             return user.save()
         except schema.NotUniqueError:
@@ -43,7 +39,7 @@ class Db:
             session = schema.Session(user = user, token = token).save()
             return token
 
-    # Returns a User list of length 1 or empty list on failure
+    # Returns the authenticated User or None on failure
     def validateToken(self, token):
         try:
             sessions = schema.Session.objects(token = token)
@@ -60,7 +56,7 @@ class Db:
             return False
 
     # Note that author should be a User object as the reference key
-    def insertPost(self, token, title, isPublic, text):
+    def insertPost(self, token, title, public, text):
         user = self.validateToken(token) if isinstance(token, basestring) else token
         if user:
             postID = schema.Counter.objects()[0].value
@@ -68,7 +64,7 @@ class Db:
                 _id = postID,
                 author = user,
                 title = title,
-                isPublic = isPublic,
+                public = public,
                 text = text,
                 publishDate = datetime.now()
             )
@@ -81,7 +77,7 @@ class Db:
 
     # Returns a list of all public posts
     def retrieveAllPosts(self):
-        return schema.Post.objects(isPublic = True)
+        return schema.Post.objects(public = True)
 
     # Returns a list of posts of an authenticated user on success or false on failure
     def retrieveAllPosts(self, token):
@@ -94,6 +90,6 @@ class Db:
         return user and schema.Post.objects(author = user, _id = postID).delete() > 0
 
     # Returns true on success or false on failure
-    def adjustPostPermission(self, token, postID, isPublic):
+    def adjustPostPermission(self, token, postID, public):
         user = self.validateToken(token)
-        return user and schema.Post.objects(author = user, _id = postID).update(isPublic = isPublic) > 0
+        return user and schema.Post.objects(author = user, _id = postID).update(public = public) > 0
