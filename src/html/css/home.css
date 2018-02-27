@@ -6,5 +6,9 @@
     padding: 0px 0;
     font-size: 16px;
     border-radius: 50%;
-    border-color: black
+    border-color: black;
+}
+
+.jqueryDialogNoTitle .ui-dialog-titlebar { 
+    display: none; 
 }

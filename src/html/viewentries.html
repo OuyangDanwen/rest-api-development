@@ -39,8 +39,8 @@
                         <td>John Doe</td>
                         <td>2018-02-30</td>
                         <td>
-                            <button class="btn btn-circle"><i class="far fa-file-alt"></i></button>
-                            <button class="btn btn-circle" id="deleteBtn" hidden="true"><i class="far fa-trash-alt"></i></button>
+                            <button class="btn btn-circle" id="btnView"><i class="far fa-file-alt"></i></button>
+                            <button class="btn btn-circle" id="btnDelete" hidden="true"><i class="far fa-trash-alt"></i></button>
                         </td>
                     </tr>
                     <tr>
@@ -48,7 +48,10 @@
                         <td>Sample entry</td>
                         <td>Jane Doo</td>
                         <td>2018-02-31</td>
-                        <td><button class="btn btn-circle"><i class="far fa-file-alt"></i></button></td>
+                        <td>
+                            <button class="btn btn-circle" id="btnView"><i class="far fa-file-alt"></i></button>
+                            <button class="btn btn-circle" id="btnDelete" hidden="true"><i class="far fa-trash-alt"></i></button>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -60,12 +63,26 @@
 
         $(document).ready(function() {
             $('#sidebar').load("sidebar.html");
+            var group = getUrlParameter("group");
             
-            if (getUrlParameter("group") === "self") {
-                $('#deleteBtn').show();
+            if (group === "self") {
+                $('#btnDelete').removeAttr("hidden");
             }
 
+            setButtonOnclick(group);
+
         });
+
+        function setButtonOnclick(group) {
+            $(document).on('click', '#btnView', function() {
+                location.href = "entry.html?type=" + group;
+            });
+
+            $(document).on('click', '#btnDelete', function() {
+                //TODO: call POST /diary/delete
+                //https://cs5331-assignments.github.io/rest-api-development/#diary-delete-an-existing-diary-entry-post
+            });
+        }
 
     </script>
 

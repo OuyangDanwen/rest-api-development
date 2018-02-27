@@ -8,3 +8,4 @@ function getUrlParameter(sParam) {
         }
     }
 }
+
