@@ -25,10 +25,9 @@ default_app_route_decorator, app.route = app.route, new_app_route_decorator
 
 TEAM_MEMBERS = ["Ngo Kim Phu", "Choo Rui Bin", "Ouyang Danwen", "Chai Wai Aik Zander"]
 
-def make_json_response(data=None, status=True, resource={}, code=200):
+def make_json_response(data=None, status=True, code=200):
     """Utility function to create the JSON responses."""
-    to_serialize = dict(resource)
-    to_serialize['status'] = status
+    to_serialize = {'status': status}
     if data is not None:
         to_serialize['result' if status else 'error'] = data
     return app.response_class(
@@ -46,7 +45,7 @@ def index():
 @app.route("/meta/heartbeat")
 def meta_heartbeat():
     """Returns true"""
-    return make_json_response(None)
+    return make_json_response()
 
 @app.route("/meta/members")
 def meta_members():
@@ -60,7 +59,7 @@ def users():
         try:
             user = db.validateToken(request.get_json()['token'])
             if user:
-                return make_json_response(None, True, {field: user[field] for field in ["username", "fullname", "age"]})
+                return make_json_response({field: user[field] for field in ["username", "fullname", "age"]})
         except KeyError:
             pass
         return make_json_response('Invalid authentication token.', False)
@@ -79,7 +78,7 @@ def users_register():
                     return make_json_response("User already exists!", False)
             except KeyError:
                 pass
-    return make_json_response("Wrong field(s)", False, code=400)
+    return make_json_response("Wrong field(s)", False, 400)
 
 @app.route("/users/authenticate", methods=['POST'])
 def users_authenticate():
@@ -90,11 +89,11 @@ def users_authenticate():
             with Db(app) as db:
                 token = db.generateToken(**user)
                 if token:
-                    return make_json_response(None, True, {'token': str(token)})
+                    return make_json_response({'token': str(token)})
                 return make_json_response(None, False)
         except KeyError, TypeError:
             pass
-    return make_json_response("Wrong field(s)", False, code=400)
+    return make_json_response("Wrong field(s)", False, 400)
 
 @app.route("/users/expire", methods=['POST'])
 def users_expire():
@@ -135,9 +134,9 @@ def diary_create():
             try:
                 postId = db.insertPost(token, **body)
                 if postId is not None:
-                    return make_json_response(postId, code=201)
+                    return make_json_response({'id': postId}, code=201)
             except KeyError:
-                return make_json_response("Wrong field(s)", False, code=400)
+                return make_json_response("Wrong field(s)", False, 400)
     except KeyError:
         pass
     return make_json_response("Invalid authentication token.", False)
@@ -154,7 +153,7 @@ def diary_delete():
                 if result is not None:
                     return make_json_response(None if result else "User doesn't own this post", result)
             except KeyError:
-                return make_json_response("Wrong field(s)", False, code=400)
+                return make_json_response("Wrong field(s)", False, 400)
     except KeyError:
         pass
     return make_json_response("Invalid authentication token.", False)
@@ -171,7 +170,7 @@ def diary_permission():
                 if result is not None:
                     return make_json_response(None if result else "User doesn't own this post", result)
             except KeyError:
-                return make_json_response("Wrong field(s)", False, code=400)
+                return make_json_response("Wrong field(s)", False, 400)
     except KeyError:
         pass
     return make_json_response("Invalid authentication token.", False)
