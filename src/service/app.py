@@ -31,13 +31,11 @@ def make_json_response(data=None, status=True, resource={}, code=200):
     to_serialize['status'] = status
     if data is not None:
         to_serialize['result' if status else 'error'] = data
-    response = app.response_class(
+    return app.response_class(
         response=json.dumps(to_serialize),
         status=code,
         mimetype='application/json'
     )
-    return response
-
 
 @app.route("/")
 def index():

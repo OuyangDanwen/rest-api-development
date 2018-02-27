@@ -2,7 +2,6 @@ from mongoengine import *
 import uuid
 import datetime
 
-# TODO: modification required later
 class User(Document):
     username = StringField(required = True, unique = True)
     fullname = StringField(required = True)
@@ -20,8 +19,8 @@ class Post(Document):
     text = StringField(required = True)
 
 class Session(Document):
-    user = ReferenceField(User, reverse_delete_rule=CASCADE)
     token = UUIDField(required = True, unique = True, default = uuid.uuid4)
+    user = ReferenceField(User, reverse_delete_rule=CASCADE)
 
 class Counter(Document):
     value = IntField(required = True)
