@@ -69,8 +69,8 @@ class Db:
                 publishDate = datetime.now()
             )
             try:
-                post.save()
                 schema.Counter.objects().update(value = postID + 1)
+                post.save()
                 return postID
             except schema.ValidationError:
                 return None
