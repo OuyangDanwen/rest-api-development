@@ -106,41 +106,75 @@ def users_expire():
             tokenDeleted = False
         return make_json_response(None, tokenDeleted)
 
+def entryFromPost(post):
+    entry = post._data # Just a cached representation of Mongo object that can be modified for convenience
+    entry['id'] = entry.pop('_id')
+    entry['author'] = post.author.username
+    entry['publish_date'] = entry['publish_date'].isoformat()
+    return entry
+
 @app.route("/diary", methods=['GET', 'POST'])
 def diary():
     """Retrieve list of diary entries"""
-    diaries = [{"id": 0, "title": "Test title", "author": "testuser", "publish_date": "2018-02-24T22:34:15Z", "public": True, "text": "This is my very first diary entry!"}]
-    return make_json_response(diaries)
+    with Db(app) as db:
+        try:
+            posts = db.retrieveAllPosts(None if request.method == 'GET' else request.get_json()['token'])
+            if posts is not None:
+                return make_json_response([entryFromPost(post) for post in posts])
+        except KeyError:
+            pass
+        return make_json_response("Invalid authentication token.", False)
 
 @app.route("/diary/create", methods=['POST'])
 def diary_create():
     """Create a new diary entry"""
-    body = request.get_json()
-    token = body["token"]
-    del body["token"]
-    if not token:
-        return make_json_response("Invalid authentication token.", False)
-    return make_json_response(2)
+    try:
+        body = request.get_json()
+        token = body.pop('token')
+        with Db(app) as db:
+            try:
+                postId = db.insertPost(token, **body)
+                if postId is not None:
+                    return make_json_response(postId, code=201)
+            except KeyError:
+                return make_json_response("Wrong field(s)", False, code=400)
+    except KeyError:
+        pass
+    return make_json_response("Invalid authentication token.", False)
 
 @app.route("/diary/delete", methods=['POST'])
 def diary_delete():
     """Delete an existing diary entry"""
-    body = request.get_json()
-    token = body["token"]
-    del body["token"]
-    if not token:
-        return make_json_response("Invalid authentication token.", False)
-    return make_json_response(None)
+    try:
+        body = request.get_json()
+        token = body.pop('token')
+        with Db(app) as db:
+            try:
+                result = db.deletePost(token, body['id'])
+                if result is not None:
+                    return make_json_response(None if result else "User doesn't own this post", result)
+            except KeyError:
+                return make_json_response("Wrong field(s)", False, code=400)
+    except KeyError:
+        pass
+    return make_json_response("Invalid authentication token.", False)
 
 @app.route("/diary/permission", methods=['POST'])
 def diary_permission():
     """Adjust diary entry permissions"""
-    body = request.get_json()
-    token = body["token"]
-    del body["token"]
-    if not token:
-        return make_json_response("Invalid authentication token.", False)
-    return make_json_response(None)
+    try:
+        body = request.get_json()
+        token = body.pop('token')
+        with Db(app) as db:
+            try:
+                result = db.adjustPostPermission(token, body['id'], body['public'])
+                if result is not None:
+                    return make_json_response(None if result else "User doesn't own this post", result)
+            except KeyError:
+                return make_json_response("Wrong field(s)", False, code=400)
+    except KeyError:
+        pass
+    return make_json_response("Invalid authentication token.", False)
 
 if __name__ == '__main__':
     # Change the working directory to the script directory
