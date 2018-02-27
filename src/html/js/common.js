@@ -9,3 +9,12 @@ function getUrlParameter(sParam) {
     }
 }
 
+/* AJAX Codes */
+
+//Registration
+$(document).ready(function(){
+		$('#Register_Form').on('submit', function(e){
+			//TODO: Validation
+			window.alert('Hi');
+		});
+	});
