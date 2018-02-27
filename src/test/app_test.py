@@ -129,9 +129,11 @@ class AppTestCase(unittest.TestCase):
         response = json.loads(users_authenticate.get_data())
         self.assertTrue(response.has_key('status'))
         self.assertTrue(response['status'])
-        self.assertTrue(response.has_key('token'))
-        self.assertIsInstance(response['token'], basestring)
-        token = response['token']
+        self.assertTrue(response.has_key('result'))
+        self.assertIsInstance(response['result'], dict)
+        self.assertTrue(response['result'].has_key('token'))
+        self.assertIsInstance(response['result']['token'], basestring)
+        token = response['result']['token']
         body = {"token": token}
         # Retrieve authenticated user
         users = self.app.post('/users', json=body)
@@ -139,12 +141,14 @@ class AppTestCase(unittest.TestCase):
         response = json.loads(users.get_data())
         self.assertTrue(response.has_key('status'))
         self.assertTrue(response['status'])
-        self.assertTrue(response.has_key('username'))
-        self.assertTrue(response.has_key('fullname'))
-        self.assertTrue(response.has_key('age'))
-        self.assertEqual(response['username'], testUsername)
-        self.assertEqual(response['fullname'], testFullname)
-        self.assertEqual(response['age'], testAge)
+        self.assertTrue(response.has_key('result'))
+        self.assertIsInstance(response['result'], dict)
+        self.assertTrue(response['result'].has_key('username'))
+        self.assertTrue(response['result'].has_key('fullname'))
+        self.assertTrue(response['result'].has_key('age'))
+        self.assertEqual(response['result']['username'], testUsername)
+        self.assertEqual(response['result']['fullname'], testFullname)
+        self.assertEqual(response['result']['age'], testAge)
         # Expire authenticated token
         users_expire = self.app.post('/users/expire', json=body)
         self.assertEqual(users_expire.status_code, 200)
@@ -194,14 +198,12 @@ class AppTestCase(unittest.TestCase):
         users_authenticate = self.app.post('/users/authenticate', json=body)
         self.assertEqual(users_authenticate.status_code, 200)
         response = json.loads(users_authenticate.get_data())
-        self.assertTrue(response.has_key('token'))
-        token = response['token']
+        token = response['result']['token']
 
         users_authenticate = self.app.post('/users/authenticate', json=bod2)
         self.assertEqual(users_authenticate.status_code, 200)
         response = json.loads(users_authenticate.get_data())
-        self.assertTrue(response.has_key('token'))
-        toke2 = response['token']
+        toke2 = response['result']['token']
         # Create new diary entries
         body = {"token": token, "title": testUsername, "public": True, "text": "Test"}
         diary_create = self.app.post('/diary/create', json=body)
@@ -210,7 +212,9 @@ class AppTestCase(unittest.TestCase):
         self.assertTrue(response.has_key('status'))
         self.assertTrue(response['status'])
         self.assertTrue(response.has_key('result'))
-        entryId = response['result']
+        self.assertIsInstance(response['result'], dict)
+        self.assertTrue(response['result'].has_key('id'))
+        entryId = response['result']['id']
 
         bod2 = {"token": toke2, "title": testUsernam2, "public": False, "text": "Tes2"}
         diary_create = self.app.post('/diary/create', json=bod2)
@@ -219,7 +223,9 @@ class AppTestCase(unittest.TestCase):
         self.assertTrue(response.has_key('status'))
         self.assertTrue(response['status'])
         self.assertTrue(response.has_key('result'))
-        entryI2 = response['result']
+        self.assertIsInstance(response['result'], dict)
+        self.assertTrue(response['result'].has_key('id'))
+        entryI2 = response['result']['id']
         # Retrieve all public diary entries
         diary = self.app.get('/diary')
         self.assertEqual(diary.status_code, 200)
