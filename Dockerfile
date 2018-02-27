@@ -25,6 +25,6 @@ EXPOSE 8080
 # Expose ports for testing from host only, remove this for deployment
 #   - 27017: process
 #   - 28017: http
-EXPOSE 27017
-EXPOSE 28017
+# EXPOSE 27017
+# EXPOSE 28017
 CMD ["/bin/bash", "/service/start_services.sh"]
