@@ -1,10 +1,11 @@
-import json
 import unittest
+import json
 import pymongo
 from pymongo import MongoClient
 from bson import ObjectId
 import mongoengine
 import uuid
+from datetime import datetime
 
 class AppTestCase(unittest.TestCase):
 
@@ -22,9 +23,8 @@ class AppTestCase(unittest.TestCase):
 
     def tearDown(self):
         with Db(app) as db:
-            schema.User.objects(username = self.testUsername).delete()
-            schema.User.objects(fullname = 'Peter Test').delete()
-            schema.Post.objects(title = self.testUsername, text = "this is a test post").delete()
+            # This should also cascade all test diary entries and sessions
+            schema.User.objects(username = {'$regex': '^' + self.testUsername}).delete()
 
     def test_db_setup(self):
         client = MongoClient(config.db_host, config.db_port)
@@ -52,32 +52,34 @@ class AppTestCase(unittest.TestCase):
         client.close()
 
     def test_db_register_user(self):
+        testUsername = self.testUsername + '-db-user'
         with Db(app) as db:
-            db.registerUser(username = self.testUsername, fullname = 'testuser', password = 'test', age = 20)
-            result = schema.User.objects(username = self.testUsername, fullname = 'testuser', age = 20)
+            db.registerUser(username = testUsername, fullname = 'testuser', password = 'test', age = 20)
+            result = schema.User.objects(username = testUsername, fullname = 'testuser', age = 20)
             # one exact match should be found
             self.assertEqual(len(result), 1)
-            schema.User.objects(username = self.testUsername, fullname = 'testuser', age = 20).delete()
-            result = schema.User.objects(username = self.testUsername, fullname = 'testuser', age = 20)
+            schema.User.objects(username = testUsername, fullname = 'testuser', age = 20).delete()
+            result = schema.User.objects(username = testUsername, fullname = 'testuser', age = 20)
             # no match should be found
             self.assertFalse(result)
 
     def test_db_insert_post(self):
+        testUsername = self.testUsername + '-db-post'
         with Db(app) as db:
-            db.registerUser(username = self.testUsername, fullname = 'testuser', password = 'test', age = 20)
-            user = schema.User.objects(username = self.testUsername, fullname = 'testuser', age = 20)[0]
-            db.insertPost(user, self.testUsername, True, "this is a test post")
+            db.registerUser(username = testUsername, fullname = 'testuser', password = 'test', age = 20)
+            user = schema.User.objects(username = testUsername, fullname = 'testuser', age = 20)[0]
+            db.insertPost(user, testUsername, True, "this is a test post")
             result = schema.Post.objects(author = user, public = True,
-                title = self.testUsername, text = "this is a test post")
+                title = testUsername, text = "this is a test post")
             # one exact match should be found
             self.assertEqual(len(result), 1)
             schema.Post.objects(author = user, public = True,
-                title = self.testUsername, text = "this is a test post").delete()
+                title = testUsername, text = "this is a test post").delete()
             result = schema.Post.objects(author = user, public = True,
-                title = self.testUsername, text = "this is a test post")
+                title = testUsername, text = "this is a test post")
             # no match should be found
             self.assertFalse(result)
-            schema.User.objects(username = self.testUsername, fullname = 'testuser', age = 20).delete()
+            schema.User.objects(username = testUsername, fullname = 'testuser', age = 20).delete()
 
     def test_index(self):
         index = self.app.get('/')
@@ -105,7 +107,7 @@ class AppTestCase(unittest.TestCase):
         self.assertIsInstance(response['result'], list)
 
     def test_users(self):
-        testUsername = 'test-' + str(uuid.uuid4())
+        testUsername = self.testUsername + '-users'
         testFullname = "Peter Test"
         testAge = 20
         body = {"username": testUsername, "password": "pass", "fullname": testFullname, "age": testAge}
