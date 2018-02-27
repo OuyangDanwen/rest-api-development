@@ -9,10 +9,11 @@
     <link href="css/sidebar.css" rel="stylesheet">
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery-3.3.1.min.js"></script>
+	<script src="js/common.js"></script>
 
 </head>
 
-<body>
+<body onload="loadHome()">
 
     <div id="wrapper">
 
@@ -21,8 +22,8 @@
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
-                <h1>Welcome, User</h1><br>
-                <p><i>(Welcome message)</i></p>
+                <h1 id="welcomeHeader">Go away, nothing to see here...</h1><br>
+                <p id="welcomeMsg"><i>Just... go away......</i></p>
             </div>
         </div>
 
