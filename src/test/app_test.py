@@ -68,7 +68,7 @@ class AppTestCase(unittest.TestCase):
         with Db(app) as db:
             db.registerUser(username = testUsername, fullname = 'testuser', password = 'test', age = 20)
             user = schema.User.objects(username = testUsername, fullname = 'testuser', age = 20)[0]
-            db.insertPost(user, testUsername, True, "this is a test post")
+            db.insertPost(user, title = testUsername, public = True, text = "this is a test post")
             result = schema.Post.objects(author = user, public = True,
                 title = testUsername, text = "this is a test post")
             # one exact match should be found
