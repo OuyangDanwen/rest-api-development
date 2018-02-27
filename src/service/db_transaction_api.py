@@ -31,10 +31,10 @@ class Db:
             return None
 
     # Returns a token on success or None on failure
-    def generateToken(self, username, password, **kw):
-        users = schema.User.objects(username=username)
+    def generateToken(self, **values):
+        users = schema.User.objects(username=values['username'])
         user = users and users[0] or None
-        if user and self.app.bcrypt.check_password_hash(user.password, password):
+        if user and self.app.bcrypt.check_password_hash(user.password, values['password']):
             token = uuid.uuid4()
             session = schema.Session(user = user, token = token).save()
             return token
@@ -56,17 +56,17 @@ class Db:
             return False
 
     # Note that author should be a User object as the reference key
-    def insertPost(self, token, title, public, text):
+    def insertPost(self, token, **values):
         user = self.validateToken(token) if isinstance(token, basestring) else token
         if user:
             postID = schema.Counter.objects()[0].value
             post = schema.Post(
                 _id = postID,
                 author = user,
-                title = title,
-                public = public,
-                text = text,
-                publishDate = datetime.now()
+                title = values['title'],
+                public = values['public'],
+                text = values['text'],
+                publish_date = datetime.now()
             )
             try:
                 schema.Counter.objects().update(value = postID + 1)
@@ -75,14 +75,12 @@ class Db:
             except schema.ValidationError:
                 return None
 
-    # Returns a list of all public posts
-    def retrieveAllPosts(self):
-        return schema.Post.objects(public = True)
-
-    # Returns a list of posts of an authenticated user on success or false on failure
+    # Returns a list of all public posts or of an authenticated user on success or false on failure
     def retrieveAllPosts(self, token):
+        if token is None:
+            return schema.Post.objects(public = True)
         user = self.validateToken(token)
-        return user and schema.Post.objects(user = user)
+        return user and schema.Post.objects(author = user)
 
     # Returns true on success or false on failure
     def deletePost(self, token, postID):
