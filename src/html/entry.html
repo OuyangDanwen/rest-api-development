@@ -9,7 +9,7 @@
     <link href="css/sidebar.css" rel="stylesheet">
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery-3.3.1.min.js"></script>
-
+    <script src="js/common.js"></script>
 </head>
 
 <body>
@@ -60,6 +60,13 @@
 
         $(document).ready(function() {
             $('#sidebar').load("sidebar.html");
+
+            if (getUrlParameter("type") === "self") {
+                $('#title').attr("disabled", true);
+                $('#entryText').attr("disabled", true);
+            } else if (getUrlParameter("type") === "public") {
+                $('#viewablePublic').attr("disabled", true);
+            }
         
         });
 
