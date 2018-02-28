@@ -22,7 +22,7 @@
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
-                <h1 id="page-header"></h1><br>
+                <h1 id="page-header">Create diary entry</h1><br>
                 <form action="" method="post" id="form-diary-entry">
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="title"><h5>Title</h5></label>
@@ -48,7 +48,6 @@
                     <br>
                     <div class="form-group">
                         <button type="button" id="btnCancel" class="btn">Cancel</button>
-                        <button type="button" id="btnDelete" class="btn">Delete</button>
                         <button type="submit" id="btnSave" class="btn btn-primary">Save</button>
                     </div>
                 </form>
@@ -64,103 +63,43 @@
 
             $('#sidebar').load("sidebar.html");
 
-            var entryType = getUrlParameter("type");
-            setPageHeader(entryType);
-            setWidgets(entryType);
-            setButtonsOnclick(entryType);
-
-        });
-
-        function setPageHeader(type) {
-            if (type === "self" || type === "public") {
-                $('#page-header').html("View diary entry");
-            } else {
-                $('#page-header').html("Create diary entry");
-            }
-        }
-
-        function setWidgets(type) {
-            $('#btnDelete').hide();
-
-            if (type === "self") {
-                $('#title').attr("disabled", true);
-                $('#entryText').attr("disabled", true);
-                $('#btnDelete').show();
-            } else if (type === "public") {
-                $('#page-header').html("View diary entry");
-                $('#title').attr("disabled", true);
-                $('#viewablePublic').attr("disabled", true);
-                $('#entryText').attr("disabled", true);
-                $('#btnSave').hide();
-            }
-        }
-
-        function setButtonsOnclick(type) {
             $('#form-diary-entry .form-group button').click(function(e) {
                 e.preventDefault();
 
                 var id = $(this).attr("id");
                 if (id === "btnCancel") {
-                    if (type === "new") {
                     location.href = "home.html";
-                    } else {
-                        location.href = "viewentries.html?group=" + type;
-                    }
-                } else if (id === "btnDelete") {
-                    //TODO: call POST /diary/delete
-                    //https://cs5331-assignments.github.io/rest-api-development/#diary-delete-an-existing-diary-entry-post
                 } else if (id === "btnSave") {
-                    if (type === "new") {
-                        var formData = {
-                            token: getCookie("uuid"),
-                            title: $("#title").val(), 
-                            public: $("#viewablePublic").is(':checked'), 
-                            text: $("#entryText").val()
-                        };
-                        var jsonData = JSON.stringify(formData);
+                    var formData = {
+                        token: getCookie("uuid"),
+                        title: $("#title").val(), 
+                        public: $("#viewablePublic").is(':checked'), 
+                        text: $("#entryText").val()
+                    };
+                    var jsonData = JSON.stringify(formData);
 
-                        $.ajax({
-                            type: 'POST',
-                            url: 'http://localhost:8080/diary/create',
-                            dataType: "json",
-                            contentType: "application/json",
-                            data: jsonData,
-                            success: function(response) {
-                                if (response.status) {
-                                    alert("Diary entry created.");
-                                    window.location.href = "http://localhost/viewentries.html?group=self";
-                                } else {
-                                    alert(response.error);
-                                }
-                            },
-                            error: function() {
-                                alert('Error. Please Try Again.');
+                    $.ajax({
+                        type: 'POST',
+                        url: 'http://localhost:8080/diary/create',
+                        dataType: "json",
+                        contentType: "application/json",
+                        data: jsonData,
+                        success: function(response) {
+                            if (response.status) {
+                                alert("Diary entry created.");
+                                window.location.href = "http://localhost/viewentries.html?group=self";
+                            } else {
+                                alert(response.error);
                             }
-                        });
-                    } else if (type === "self") {
-                        //TODO: call POST /diary/permission
-                        //https://cs5331-assignments.github.io/rest-api-development/#diary-adjust-diary-entry-permissions-post
-                    }
-  
+                        },
+                        error: function() {
+                            alert('Error. Please Try Again.');
+                        }
+                    });
                 }
             });
 
-            $('#btnDelete').click(function() {
-                
-            });
-
-            $('#btnSave').click(function() {
-                if (type === "new") {
-
-                    //TODO: call POST /diary/create
-                    //https://cs5331-assignments.github.io/rest-api-development/#diary-create-a-new-diary-entry-post
-                } else if (type === "self") {
-                    
-                }
-            });
-        }
-
-
+        });
 
     </script>
 
