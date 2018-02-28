@@ -23,7 +23,7 @@
         <div id="page-content-wrapper">
             <div class="container-fluid">
                 <h1 id="page-header"></h1><br>
-                <form>
+                <form action="" method="post" id="form-diary-entry">
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="title"><h5>Title</h5></label>
                         <div class="col-sm-8">
@@ -96,26 +96,66 @@
         }
 
         function setButtonsOnclick(type) {
-            $('#btnCancel').click(function() {
-                if (type === "new") {
+            $('#form-diary-entry .form-group button').click(function(e) {
+                e.preventDefault();
+
+                var id = $(this).attr("id");
+                if (id === "btnCancel") {
+                    if (type === "new") {
                     location.href = "home.html";
-                } else {
-                    location.href = "viewentries.html?group=" + type;
+                    } else {
+                        location.href = "viewentries.html?group=" + type;
+                    }
+                } else if (id === "btnDelete") {
+                    //TODO: call POST /diary/delete
+                    //https://cs5331-assignments.github.io/rest-api-development/#diary-delete-an-existing-diary-entry-post
+                } else if (id === "btnSave") {
+                    if (type === "new") {
+                        var formData = {
+                            token: getCookie("uuid"),
+                            title: $("#title").val(), 
+                            public: $("#viewablePublic").is(':checked'), 
+                            text: $("#entryText").val()
+                        };
+                        var jsonData = JSON.stringify(formData);
+
+                        $.ajax({
+                            type: 'POST',
+                            url: 'http://localhost:8080/diary/create',
+                            dataType: "json",
+                            contentType: "application/json",
+                            data: jsonData,
+                            success: function(response) {
+                                if (response.status) {
+                                    alert("Diary entry created.");
+                                    window.location.href = "http://localhost/viewentries.html?group=self";
+                                } else {
+                                    alert(response.error);
+                                }
+                            },
+                            error: function() {
+                                alert('Error. Please Try Again.');
+                            }
+                        });
+                    } else if (type === "self") {
+                        //TODO: call POST /diary/permission
+                        //https://cs5331-assignments.github.io/rest-api-development/#diary-adjust-diary-entry-permissions-post
+                    }
+  
                 }
             });
 
             $('#btnDelete').click(function() {
-                //TODO: call POST /diary/delete
-                //https://cs5331-assignments.github.io/rest-api-development/#diary-delete-an-existing-diary-entry-post
+                
             });
 
             $('#btnSave').click(function() {
                 if (type === "new") {
+
                     //TODO: call POST /diary/create
                     //https://cs5331-assignments.github.io/rest-api-development/#diary-create-a-new-diary-entry-post
                 } else if (type === "self") {
-                    //TODO: call POST /diary/permission
-                    //https://cs5331-assignments.github.io/rest-api-development/#diary-adjust-diary-entry-permissions-post
+                    
                 }
             });
         }
