@@ -7,6 +7,7 @@
     <title>View Entries</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
     <link rel="stylesheet" href="css/bootstrap.min.css" id="bootstrap-css">
+    <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
     <link href="css/sidebar.css" rel="stylesheet">
     <link href="css/home.css" rel="stylesheet">
     <script src="js/bootstrap.min.js"></script>
@@ -73,8 +74,10 @@
             setButtonOnclick(group);
 
             $('#entry-details-dialog').dialog({
+                width: 600,
                 autoOpen: false,
                 modal: true,
+                title: 'Diary Entry',
                 buttons: {
                     Close: function() {
                         $(this).dialog('close');
@@ -85,6 +88,30 @@
         });
 
         function populateTable(group) {
+            var response = {
+              "status": true,
+              "result": [
+                {
+                  "id": 2,
+                  "title": "A New Lesson!",
+                  "author": "audrey123talks",
+                  "publish_date": "2013-02-29T13:37:00+00:00",
+                  "public": true,
+                  "text": "Check out my latest video!"
+                },
+                {
+                  "id": 3,
+                  "title": "No One Can See This Post",
+                  "author": "audrey123talks",
+                  "publish_date": "2013-02-29T13:38:00+00:00",
+                  "public": false,
+                  "text": "currently we SMB mount the host filesystem in the Linux VM so we are currently bound by whatever functionality that offers (and it doesn’t support change notifications, aka inotify, on the Linux side). On the Mac we are using a custom filesystem based on FUSE which allows us to reflect change events from the host into the Linux VM (where they pop up as inotify events). This isn’t perfect because there are some differences in the filesystem semantics between MacOS and Linux, but they are reasonably close. We are looking into implementing something similar on Windows, but the filesystem semantics on Windows are significantly more different."
+                }
+              ]
+            };
+            parseToHtml(response.result, group);
+
+/*
             if (group === "self") {
                 var formData = { token: getCookie("uuid") };                            
                 var jsonData = JSON.stringify(formData);
@@ -116,6 +143,7 @@
                     }
                 });   
             }
+            */
         }
 
         function setButtonOnclick(group) {
@@ -130,7 +158,7 @@
                     .html('<div><p>Are you sure you want to delete this entry?</p></div>')
                     .dialog({
                         modal: true, title: 'Confirm Entry Deletion', zIndex: 10000, autoOpen: true,
-                        width: 'auto', resizable: false, position: { my: "center", at: "top" },
+                        width: 'auto', resizable: false,
                         buttons: {
                             Yes: function () {
                                 var data = { 
@@ -183,9 +211,9 @@
                 html += "<td>" + entries[i].title + "</td>";
                 html += "<td>" + entries[i].author + "</td>";
                 html += "<td>" + entries[i].publish_date + "</td>";
-                html += "<td><button class='btn btn-circle' id='btnView' value='" + entries[i].id + "'><i class='far fa-file-alt'></i></button>";
+                html += "<td><button class='btn btn-circle' id='btnView' title='View Text' value='" + entries[i].id + "'><i class='far fa-file-alt'></i></button>";
                 if (group === "self") {
-                    html += "<button class='btn btn-circle' id='btnDelete' value='" + entries[i].id + "'><i class='far fa-trash-alt'></i></button></td>";
+                    html += "<button class='btn btn-circle' id='btnDelete' title='Delete' value='" + entries[i].id + "'><i class='far fa-trash-alt'></i></button></td>";
                 } else  {
                     html += "</td>";
                 }
