@@ -96,7 +96,11 @@
                     contentType: "application/json",
                     data: jsonData,
                     success: function(data) {
-                        parseToHtml(data, group);
+                        if (response.status) {
+                            parseToHtml(response.result, group);
+                        } else {
+                            alert(response.error);
+                        }
                     }
                 });
             } else if (group === "public") {
@@ -104,7 +108,11 @@
                     type: "GET",
                     url: "http://localhost:8080/diary",
                     success: function(data) {
-                        parseToHtml(data, group);
+                        if (response.status) {
+                            parseToHtml(response.result, group);
+                        } else {
+                            alert(response.error);
+                        }
                     }
                 });   
             }
@@ -113,8 +121,7 @@
         function setButtonOnclick(group) {
             $("button[id='btnView']").click(function() {
                 var entryDetails = diaryEntriesId[$(this).val()];
-                entryDetails = "testing"; // TO REMOVE
-                $('#entry-text').text(entryDetails);
+                $('#entry-text').text(entryDetails.text);
                 $('#entry-details-dialog').dialog('open');
             });
             
@@ -164,9 +171,7 @@
 
         }
 
-        function parseToHtml(data, group) {
-            var entries = JSON.parse(data);
-
+        function parseToHtml(entries, group) {
             var html = "";
             var count = 1;
 
@@ -190,7 +195,6 @@
 
             $('#table-entries > tbody').html(html);
         }
-
 
     </script>
 
