@@ -71,7 +71,7 @@
 
             var group = getUrlParameter("group");
             populateTable(group);
-            setButtonOnclick(group);
+            setButtonOnclick();
 
             $('#entry-details-dialog').dialog({
                 width: 600,
@@ -88,30 +88,6 @@
         });
 
         function populateTable(group) {
-            var response = {
-              "status": true,
-              "result": [
-                {
-                  "id": 2,
-                  "title": "A New Lesson!",
-                  "author": "audrey123talks",
-                  "publish_date": "2013-02-29T13:37:00+00:00",
-                  "public": true,
-                  "text": "Check out my latest video!"
-                },
-                {
-                  "id": 3,
-                  "title": "No One Can See This Post",
-                  "author": "audrey123talks",
-                  "publish_date": "2013-02-29T13:38:00+00:00",
-                  "public": false,
-                  "text": "currently we SMB mount the host filesystem in the Linux VM so we are currently bound by whatever functionality that offers (and it doesn’t support change notifications, aka inotify, on the Linux side). On the Mac we are using a custom filesystem based on FUSE which allows us to reflect change events from the host into the Linux VM (where they pop up as inotify events). This isn’t perfect because there are some differences in the filesystem semantics between MacOS and Linux, but they are reasonably close. We are looking into implementing something similar on Windows, but the filesystem semantics on Windows are significantly more different."
-                }
-              ]
-            };
-            parseToHtml(response.result, group);
-
-/*
             if (group === "self") {
                 var formData = { token: getCookie("uuid") };                            
                 var jsonData = JSON.stringify(formData);
@@ -122,7 +98,7 @@
                     dataType: "json",
                     contentType: "application/json",
                     data: jsonData,
-                    success: function(data) {
+                    success: function(response) {
                         if (response.status) {
                             parseToHtml(response.result, group);
                         } else {
@@ -134,7 +110,7 @@
                 $.ajax({
                     type: "GET",
                     url: "http://localhost:8080/diary",
-                    success: function(data) {
+                    success: function(response) {
                         if (response.status) {
                             parseToHtml(response.result, group);
                         } else {
@@ -143,10 +119,9 @@
                     }
                 });   
             }
-            */
         }
 
-        function setButtonOnclick(group) {
+        function setButtonOnclick() {
             $("button[id='btnView']").click(function() {
                 var entryDetails = diaryEntriesId[$(this).val()];
                 $('#entry-text').text(entryDetails.text);
@@ -196,7 +171,6 @@
                         }
                     })
             });
-
         }
 
         function parseToHtml(entries, group) {
