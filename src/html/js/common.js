@@ -115,7 +115,18 @@ function destroyCookie() {
 $(document).ready(function(){
 	$('#Register_Form').on('submit', function(e){
 		e.preventDefault();
-		// TODO: Field Validation
+		// Partial Validation Implemented, Sufficient For This Assignment
+		
+		// Age Integer Verification
+		if (!Number.isInteger(parseInt($("#Age").val()))) {
+			alert("Invalid Age.");
+			return;
+		}
+		
+		if ($("#Age").val() < 0 || $("#Age").val() > 125) {
+			alert("Are you too young or too old? Because that age is impossible on Earth!1!1!1");
+			return;
+		}
 		
 		// Passwords Matching
 		if ($("#Password").val() != $("#CfmPassword").val()) {
@@ -170,8 +181,7 @@ $(document).ready(function(){
 			data: jsonData,
 			success: function(response) { // When status (true or false) happens during login
 				if (response.status) {
-					alert("UUID Value (Check with Cookie Value): " + response.result.token); // TO REMOVE THIS. FOR DEBUG PURPOSES ONLY
-					setCookie("uuid", response.result.token, 30); //30 minutes expiry
+					setCookie("uuid", response.result.token, 120); //120 minutes expiry
 					window.location.href = "http://localhost/home.html";
 				} else {
 					alert("Invalid Username or Password.");
