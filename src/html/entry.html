@@ -73,7 +73,7 @@
                     var formData = {
                         token: getCookie("uuid"),
                         title: $("#title").val(), 
-                        public: $("#viewablePublic").is(':checked'), 
+                        public: $("#viewablePublic").prop('checked'), 
                         text: $("#entryText").val()
                     };
                     var jsonData = JSON.stringify(formData);

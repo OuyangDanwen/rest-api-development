@@ -61,6 +61,14 @@
         <p id="entry-text"></p>
     </div>
 
+    <div id="entry-details-addnl-dialog">
+        <label id="label-viewable-public-addnl">    
+            <input type="checkbox" id="viewable-public-addnl" class="p-3">
+              Viewable by public
+        </label><br><hr>
+        <div id="div-entry-text-addnl"><p id="entry-text-addnl"></p></div>
+    </div>
+
     <script>
 
         var diaryEntriesId = {};
@@ -71,10 +79,10 @@
 
             var group = getUrlParameter("group");
             populateTable(group);
-            setButtonOnclick();
+            setButtonOnclick(group);
 
             $('#entry-details-dialog').dialog({
-                width: 600,
+                width: 800,
                 autoOpen: false,
                 modal: true,
                 title: 'Diary Entry',
@@ -85,9 +93,71 @@
                 }
             });
 
+            $('#entry-details-addnl-dialog').dialog({
+                width: 800,
+                autoOpen: false,
+                modal: true,
+                title: 'Diary Entry',
+                buttons: {
+                    Save: function() {
+                        var formData = {
+                            "token": getCookie("uuid"),
+                            "id": $('#entry-text-addnl').val(),
+                            "public": $('#viewable-public-addnl').prop('checked')
+                        };
+                        var jsonData = JSON.stringify(formData);
+
+                        $.ajax({
+                            type: "POST",
+                            url: "http://localhost:8080/diary/permission",
+                            dataType: "json",
+                            contentType: "application/json",
+                            data: jsonData,
+                            success: function(response) {
+                                if (response.status) {
+                                    alert("Permissions updated");
+                                } else {
+                                    alert(response.error);
+                                }
+                            },
+                            error: function() {
+                                alert('Error. Please try again.');
+                            }
+                        });
+                    },
+                    Close: function() {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+
         });
 
         function populateTable(group) {
+            /*
+            var response = {
+              "status": true,
+              "result": [
+                {
+                  "id": 2,
+                  "title": "A New Lesson!",
+                  "author": "audrey123talks",
+                  "publish_date": "2013-02-29T13:37:00+00:00",
+                  "public": true,
+                  "text": "Check out my latest video!"
+                },
+                {
+                  "id": 3,
+                  "title": "No One Can See This Post",
+                  "author": "audrey123talks",
+                  "publish_date": "2013-02-29T13:38:00+00:00",
+                  "public": false,
+                  "text": "currently we SMB mount the host filesystem in the Linux VM so we are currently bound by whatever functionality that offers (and it doesn’t support change notifications, aka inotify, on the Linux side). On the Mac we are using a custom filesystem based on FUSE which allows us to reflect change events from the host into the Linux VM (where they pop up as inotify events). This isn’t perfect because there are some differences in the filesystem semantics between MacOS and Linux, but they are reasonably close. We are looking into implementing something similar on Windows, but the filesystem semantics on Windows are significantly more different."
+                }
+              ]
+            };
+            parseToHtml(response.result, group);
+            */
             if (group === "self") {
                 var formData = { token: getCookie("uuid") };                            
                 var jsonData = JSON.stringify(formData);
@@ -104,6 +174,9 @@
                         } else {
                             alert(response.error);
                         }
+                    },
+                    error: function() {
+                        alert('Error. Please try again.');
                     }
                 });
             } else if (group === "public") {
@@ -116,16 +189,29 @@
                         } else {
                             alert(response.error);
                         }
+                    },
+                    error: function() {
+                        alert('Error. Please try again.');
                     }
                 });   
             }
         }
 
-        function setButtonOnclick() {
+        function setButtonOnclick(group) {
             $("button[id='btnView']").click(function() {
                 var entryDetails = diaryEntriesId[$(this).val()];
-                $('#entry-text').text(entryDetails.text);
-                $('#entry-details-dialog').dialog('open');
+                console.log("id = " + $(this).val() + ", " + entryDetails);
+                if (group === "self") {
+                    if (entryDetails.public) {
+                        $('#viewable-public-addnl').attr('checked', true);
+                    }
+                    $('#entry-text-addnl').text(entryDetails.text);
+                    $('#entry-text-addnl').val($(this).val());
+                    $('#entry-details-addnl-dialog').dialog('open');
+                } else if (group === "public") {
+                    $('#entry-text').text(entryDetails.text);
+                    $('#entry-details-dialog').dialog('open');
+                }
             });
             
             $("button[id='btnDelete']").click(function() {
@@ -176,6 +262,7 @@
         function parseToHtml(entries, group) {
             var html = "";
             var count = 1;
+            console.log(entries);
 
             for (var i in entries) {
                 diaryEntriesId[entries[i].id] = entries[i];
