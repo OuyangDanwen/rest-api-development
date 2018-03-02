@@ -37,7 +37,7 @@ $(document).ready(function() {
 
 				$.ajax({
 					type: "POST",
-					url: "http://localhost:8080/diary/permission",
+					url: baseURL + ':8080/diary/permission',
 					dataType: "json",
 					contentType: "application/json",
 					data: jsonData,
@@ -76,7 +76,7 @@ function populateTable(group) {
 
 		$.ajax({
 			type: "POST",
-			url: "http://localhost:8080/diary",
+			url: baseURL + ':8080/diary',
 			dataType: "json",
 			contentType: "application/json",
 			data: jsonData,
@@ -94,7 +94,7 @@ function populateTable(group) {
 	} else if (group === "public") {
 		$.ajax({
 			type: "GET",
-			url: "http://localhost:8080/diary",
+			url: baseURL + ':8080/diary',
 			success: function(response) {
 				if (response.status) {
 					parseToHtml(response.result, group);
@@ -142,7 +142,7 @@ function setButtonOnclick(group) {
 
 						$.ajax({
 							type: 'POST',
-							url: 'http://localhost:8080/diary/delete',
+							url: baseURL + ':8080/diary/delete',
 							dataType: "json",
 							contentType: "application/json",
 							data: jsonData,

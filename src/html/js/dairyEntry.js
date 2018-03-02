@@ -18,14 +18,14 @@ $(document).ready(function() {
 
 			$.ajax({
 				type: 'POST',
-				url: 'http://localhost:8080/diary/create',
+				url: baseURL + ':8080/diary/create',
 				dataType: "json",
 				contentType: "application/json",
 				data: jsonData,
 				success: function(response) {
 					if (response.status) {
 						alert("Diary entry created.");
-						window.location.href = "http://localhost/viewentries.html?group=self";
+						window.location.href = "viewentries.html?group=self";
 					} else {
 						alert(response.error);
 					}
