@@ -44,6 +44,7 @@ $(document).ready(function() {
 					success: function(response) {
 						if (response.status) {
 							alert("Permissions updated");
+							window.location.reload();
 						} else {
 							alert(response.error);
 						}
@@ -114,7 +115,9 @@ function setButtonOnclick(group) {
 		var entryDetails = diaryEntriesId[$(this).val()];
 		if (group === "self") {
 			if (entryDetails.public) {
-				$('#viewable-public-addnl').attr('checked', true);
+				$('#viewable-public-addnl').prop('checked', true);
+			} else {
+				$('#viewable-public-addnl').prop('checked', false);
 			}
 			$('#entry-text-addnl').text(entryDetails.text);
 			$('#entry-text-addnl').val($(this).val());
