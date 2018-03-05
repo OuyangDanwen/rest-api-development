@@ -145,11 +145,13 @@ We have identified these security issues, however it had been stated in the assi
 
 #### Question 4: Are there any additional features you would like to highlight?
 
-The generated cookie has an expiry time of 2 hours to reduce the possibility of replay attacks.
+The generated cookie has an expiry time of 2 hours to reduce the possibility of replay attacks. However, this can be deemed insecure (See Question 5).
 
 #### Question 5: Is your web application vulnerable? If yes, how and why? If not, what measures did you take to secure it?
 
-One potential weakness is in the cookie management - currently we are still using the default JavaScript cookie functions. A better implementation would be to use JWT, however it was assured that we would not have to do its implementation in this current assignment.
+One potential weakness is in the cookie management - currently we are still using the default JavaScript cookie functions. Since these are implemented at the client side, a better implementation would be to use JWT. However, it was assured that we would not have to do its implementation in this current assignment.
+
+Another vulnerability is the lack of SSL. Due to that, all web traffic is sent / received in the clear, allowing all kinds of MITM attacks to occur.
 
 #### Feedback: Is there any other feedback you would like to give?
 
