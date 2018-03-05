@@ -1,3 +1,21 @@
+// Meta
+function Meta() {
+	$.ajax({
+		type: "GET",
+		url: baseURL + ':8080/meta/members',
+		success: function(response) {
+			if (response.status) {
+				alert("Success.\n\nTeam Members:\n" + response.result);
+			} else {
+				alert("Looks like API is down.");
+			}
+		},
+		error: function() {
+			alert("Looks like API is down.");
+		}
+	});  
+}
+
 // Registration
 $(document).ready(function(){
 	$('#Register_Form').on('submit', function(e){
@@ -30,20 +48,21 @@ $(document).ready(function(){
 		var jsonData = JSON.stringify(formData);
 		$.ajax({
 			type: 'POST',
-			url: 'http://localhost:8080/users/register',
+			url: baseURL + ':8080/users/register',
 			dataType: "json",
 			contentType: "application/json",
 			data: jsonData,
 			success: function(response) { // When status (true or false) happens during registration
 				if (response.status) {
 					alert("Registration Successful.");
-					window.location.href = "http://localhost";
+					window.location.href = "index.html";
 				} else {
 					alert(response.error);
 				}
 			},
 			error: function() { // When Bad Request Happens (error 400).
 				alert('Error. Please Try Again.');
+				window.location.href = "register.html";
 			}
 		});
 	});
@@ -62,20 +81,21 @@ $(document).ready(function(){
 		var jsonData = JSON.stringify(formData);
 		$.ajax({
 			type: 'POST',
-			url: 'http://localhost:8080/users/authenticate',
+			url: baseURL + ':8080/users/authenticate',
 			dataType: "json",
 			contentType: "application/json",
 			data: jsonData,
 			success: function(response) { // When status (true or false) happens during login
 				if (response.status) {
 					setCookie("uuid", response.result.token, 120); //120 minutes expiry
-					window.location.href = "http://localhost/home.html";
+					window.location.href = "home.html";
 				} else {
 					alert("Invalid Username or Password.");
 				}
 			},
 			error: function() { // When Bad Request Happens (error 400).
 				alert('Error. Please Try Again.');
+				window.location.href = "index.html";
 			}
 		});
 	});
@@ -88,7 +108,7 @@ function logout() {
 	
 	$.ajax({
 			type: 'POST',
-			url: 'http://localhost:8080/users/expire',
+			url: baseURL + ':8080/users/expire',
 			dataType: "json",
 			contentType: "application/json",
 			data: jsonData,
@@ -96,13 +116,14 @@ function logout() {
 				if (response.status) {
 					destroyCookie();
 					alert("Logout Successful.");
-					window.location.href = "http://localhost";
+					window.location.href = "index.html";
 				} else {
-					window.location.href = "http://localhost";
+					window.location.href = "index.html";
 				}
 			},
 			error: function() { // When Bad Request Happens (error 400).
-				alert('Error. Please Try Again.');
+				alert('Error. Redirecting...');
+				window.location.href = "index.html";
 			}
 	});
 }

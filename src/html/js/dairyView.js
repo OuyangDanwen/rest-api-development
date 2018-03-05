@@ -37,13 +37,14 @@ $(document).ready(function() {
 
 				$.ajax({
 					type: "POST",
-					url: "http://localhost:8080/diary/permission",
+					url: baseURL + ':8080/diary/permission',
 					dataType: "json",
 					contentType: "application/json",
 					data: jsonData,
 					success: function(response) {
 						if (response.status) {
 							alert("Permissions updated");
+							window.location.reload();
 						} else {
 							alert(response.error);
 						}
@@ -76,7 +77,7 @@ function populateTable(group) {
 
 		$.ajax({
 			type: "POST",
-			url: "http://localhost:8080/diary",
+			url: baseURL + ':8080/diary',
 			dataType: "json",
 			contentType: "application/json",
 			data: jsonData,
@@ -94,7 +95,7 @@ function populateTable(group) {
 	} else if (group === "public") {
 		$.ajax({
 			type: "GET",
-			url: "http://localhost:8080/diary",
+			url: baseURL + ':8080/diary',
 			success: function(response) {
 				if (response.status) {
 					parseToHtml(response.result, group);
@@ -114,7 +115,9 @@ function setButtonOnclick(group) {
 		var entryDetails = diaryEntriesId[$(this).val()];
 		if (group === "self") {
 			if (entryDetails.public) {
-				$('#viewable-public-addnl').attr('checked', true);
+				$('#viewable-public-addnl').prop('checked', true);
+			} else {
+				$('#viewable-public-addnl').prop('checked', false);
 			}
 			$('#entry-text-addnl').text(entryDetails.text);
 			$('#entry-text-addnl').val($(this).val());
@@ -142,7 +145,7 @@ function setButtonOnclick(group) {
 
 						$.ajax({
 							type: 'POST',
-							url: 'http://localhost:8080/diary/delete',
+							url: baseURL + ':8080/diary/delete',
 							dataType: "json",
 							contentType: "application/json",
 							data: jsonData,
