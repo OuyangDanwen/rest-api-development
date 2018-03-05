@@ -20,6 +20,10 @@ function Meta() {
 $(document).ready(function(){
 	$('#Register_Form').on('submit', function(e){
 		e.preventDefault();
+		var passwordSanitised = DOMPurify.sanitize($('#Password').val());
+		var cfmPasswordSanitised = DOMPurify.sanitize($("#CfmPassword").val());
+		var usernameSanitised = DOMPurify.sanitize($("#Username").val());
+		var fullnameSanitised = DOMPurify.sanitize($("#Fullname").val());
 		// Partial Validation Implemented, Sufficient For This Assignment
 		
 		// Age Integer Verification
@@ -34,15 +38,15 @@ $(document).ready(function(){
 		}
 		
 		// Passwords Matching
-		if ($("#Password").val() != $("#CfmPassword").val()) {
+		if (passwordSanitised != cfmPasswordSanitised) {
 			alert("Passwords do not match.");
 			return;
 		}
 				
 		var formData = {
-			username: $("#Username").val(), 
-			password: $("#Password").val(), 
-			fullname: $("#Fullname").val(),
+			username: usernameSanitised, 
+			password: passwordSanitised, 
+			fullname: fullnameSanitised,
 			age: $("#Age").val()
 		};
 		var jsonData = JSON.stringify(formData);
@@ -72,10 +76,12 @@ $(document).ready(function(){
 $(document).ready(function(){
 	$('#Login_Form').on('submit', function(e){
 		e.preventDefault();
+		var usernameSanitised = DOMPurify.sanitize($("#Username").val());
+		var passwordSanitised = DOMPurify.sanitize($('#Password').val());
 		
 		var formData = {
-			username: $("#Username").val(), 
-			password: $("#Password").val()
+			username: usernameSanitised,
+			password: passwordSanitised
 		};
 		
 		var jsonData = JSON.stringify(formData);

@@ -8,11 +8,14 @@ $(document).ready(function() {
 		if (id === "btnCancel") {
 			location.href = "home.html";
 		} else if (id === "btnSave") {
+			var titleSanitised = DOMPurify.sanitize($('#title').val());
+			var entryTextSanitised = DOMPurify.sanitize($('#entryText').val());
+
 			var formData = {
 				token: getCookie("uuid"),
-				title: $("#title").val(), 
+				title: titleSanitised,
 				public: $("#viewablePublic").prop('checked'), 
-				text: $("#entryText").val()
+				text: entryTextSanitised
 			};
 			var jsonData = JSON.stringify(formData);
 
