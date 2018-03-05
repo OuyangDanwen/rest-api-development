@@ -76,7 +76,7 @@ On a different window:
 
 ```
 curl http://localhost:80
-curl http://localhost:8080
+curl  http://localhost:8080
 ```
 
 If a response is received, you're good to go.
@@ -85,10 +85,33 @@ If a response is received, you're good to go.
 
 ## Screenshots
 
-Please replace the example screenshots with screenshots of your completed
-project. Feel free to include more than one.
+Login Page
 
-![Sample Screenshot](./img/samplescreenshot.png)
+![Login Page](./img/login.png)
+
+Register User
+
+![Login Page](./img/register.png)
+
+Create Diary Entry
+
+![Create Diary Entry](./img/createentry.png)
+
+View Public Entries
+
+![View Public Entries](./img/viewpublicentries.png)
+
+View My Personal Entries
+
+![View My Personal Entries](./img/viewmyentries.png)
+
+View Diary Entry Details and Modify Permissions
+
+![View Diary Entry Details and Modify Permissions](./img/viewentrydialog.png)
+
+Delete Entry
+
+![Delete Entry](./img/deleteentry.png)
 
 ## Administration and Evaluation
 
@@ -96,48 +119,53 @@ Please fill out this section with details relevant to your team.
 
 ### Team Members
 
-1. Member 1 Name
-2. Member 2 Name
-3. Member 3 Name
-4. Member 4 Name
+1. Ngo Kim Phu
+2. Choo Rui Bin
+3. Ouyang Danwen
+4. Chai Wai Aik Zander
 
 ### Short Answer Questions
 
 #### Question 1: Briefly describe the web technology stack used in your implementation.
 
-Answer: Please replace this sentence with your answer.
+The web framework is written in Python Flask that connects to a MongoDB database and the web server is hosted on Apache. The frontend is designed using HTML, Bootstrap CSS and JavaScript (jQuery).
 
 #### Question 2: Are there any security considerations your team thought about?
 
-Answer: Please replace this sentence with your answer.
+We have identified these security issues, however it had been stated in the assignment brief that there is no need to implement the actual security measures to counter these issues.
+- Cookie management
+- Replay attacks
+- XSS and CSRF attacks
+- Timing attacks
+- Ensuring that private diary entries cannot be viewed by the public
 
 #### Question 3: Are there any improvements you would make to the API specification to improve the security of the web application?
 
-Answer: Please replace this sentence with your answer.
+
 
 #### Question 4: Are there any additional features you would like to highlight?
 
-Answer: Please replace this sentence with your answer.
+The generated cookie has an expiry time of 2 hours to reduce the possibility of replay attacks.
 
 #### Question 5: Is your web application vulnerable? If yes, how and why? If not, what measures did you take to secure it?
 
-Answer: Please replace this sentence with your answer.
+One potential weakness is in the cookie management - currently we are still using the default JavaScript cookie functions. A better implementation would be to use JWT, however it was assured that we would not have to do its implementation in this current assignment.
 
 #### Feedback: Is there any other feedback you would like to give?
-
-Answer: Please replace this sentence with your answer.
 
 ### Declaration
 
 #### Please declare your individual contributions to the assignment:
 
-1. Member 1 Name
-    - Integrated feature x into component y
-    - Implemented z
-2. Member 2 Name
-    - Wrote the front-end code
-3. Member 3 Name
-    - Designed the database schema
-4. Member 4 Name
-    - Implemented x
-
+1. Ngo Kim Phu
+  - Wrote the back-end code
+  - Designed the Docker configuration
+2. Choo Rui Bin
+  - Wrote the front-end code
+  - Integrated the RESTful API into the front-end
+3. Ouyang Danwen
+  - Designed the database schema
+  - Wrote the back-end code
+4. Chai Wai Aik Zander
+  - Wrote the front-end code
+  - Integrated the RESTful API into the front-end
