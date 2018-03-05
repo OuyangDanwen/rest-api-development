@@ -128,7 +128,7 @@ Please fill out this section with details relevant to your team.
 
 #### Question 1: Briefly describe the web technology stack used in your implementation.
 
-The web framework is written in Python Flask that connects to a MongoDB database and the web server is hosted on Apache.
+The web app is written on Python Flask framework that connects to a MongoDB database and the frontend web server is hosted on Apache.
 The frontend is designed using HTML, Bootstrap 4 and JavaScript (jQuery 3.3.1).
 
 #### Question 2: Are there any security considerations your team thought about?
@@ -136,7 +136,7 @@ The frontend is designed using HTML, Bootstrap 4 and JavaScript (jQuery 3.3.1).
 We had identified the following security considerations, however it had been stated in the assignment brief that there is no need to implement the actual security measures to counter these issues.
 
 Implemented:
-- Password hashing using bcrypt
+- Password salted-hashing using bcrypt
 - Client-side XSS sanitisation using DOMPurify
 
 Considered but not implemented:
@@ -160,26 +160,30 @@ One potential weakness is in the cookie management - currently we are still usin
 
 Another vulnerability is the lack of SSL. Due to that, all web traffic is sent / received in the clear, allowing all kinds of MITM attacks to occur.
 
-Our usage of DOMPurify provides client-side sanitisation for our web app. However, it is not a foolproof way. For a more rigorous defense, server-side sanitisation should be employed as well.
+Our usage of DOMPurify provides client-side sanitisation for our web app. However, it is not a foolproof way. For a more rigorous defense (e.g. against persistent XSS), server-side sanitisation should be employed as well.
 
 #### Feedback: Is there any other feedback you would like to give?
 
 Logging should be done on the server-side to track all the significant actions made by all the users of the web app.
+A framework/tool we could use to test our final webapp would be really appreciated.
+The API should also consider RESTful features like: correct http verbs for end-points (GET for idempotent, resource-info-acquiring end-points, DELETE for resource deletion...), response status codes that make more sense (4xx for client-side errors), maybe a header instead of a field for the auth token...
 
 ### Declaration
 
 #### Please declare your individual contributions to the assignment:
 
 1. Ngo Kim Phu
-  - Wrote the back-end code
-  - Designed the Docker configuration
+  - Managed project, GitHub organization, repository
+  - Configured CircleCI continuous integration for quality control
+  - Wrote the back-end routing and logic code
 2. Choo Rui Bin
   - Wrote the front-end code
   - Integrated the RESTful API into the front-end
   - Wrote the documentation
 3. Ouyang Danwen
+  - Designed the Docker configuration
   - Designed the database schema
-  - Wrote the back-end code
+  - Wrote the back-end db code
 4. Chai Wai Aik Zander
   - Wrote the front-end code
   - Integrated the RESTful API into the front-end
