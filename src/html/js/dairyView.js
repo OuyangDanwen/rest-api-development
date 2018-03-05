@@ -185,7 +185,7 @@ function parseToHtml(entries, group) {
 		html += "<tr>";
 		html += "<td>" + count + "</td>";
 		html += "<td>" + DOMPurify.sanitize(entries[i].title) + "</td>";
-		html += "<td>" + entries[i].author + "</td>";
+		html += "<td>" + DOMPurify.sanitize(entries[i].author) + "</td>";
 		html += "<td>" + entries[i].publish_date + "</td>";
 		html += "<td><button class='btn btn-circle' id='btnView' title='View Text' value='" + entries[i].id + "'><i class='far fa-file-alt'></i></button>";
 		if (group === "self") {
