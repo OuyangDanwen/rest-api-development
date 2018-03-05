@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>View Entries</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css" id="bootstrap-css">
+    <link href="css/jquery-ui.css" rel="stylesheet">
+    <link href="css/sidebar.css" rel="stylesheet">
+    <link href="css/home.css" rel="stylesheet">
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/purify.min.js"></script>
+    <script src="js/common.js"></script>
+	<script src="js/dairyView.js"></script>
+</head>
+
+<body onload="isCookieValid()">
+    <div id="wrapper">
+        <div id="sidebar"></div>
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <h1 id="page-header">View my entries</h1><br>
+                <table class="table table-hover" id="table-entries">
+                    <thead class="thead-light">
+						<tr>
+							<th style="width: 5%">#</th>
+							<th style="width: 35%">Title</th>
+							<th style="width: 25%">Author</th>
+							<th style="width: 25%">Publish Date</th>
+							<th style="width: 10%">Actions</th>
+						</tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="entry-details-dialog">
+        <p id="entry-text"></p>
+    </div>
+
+    <div id="entry-details-addnl-dialog">
+        <label id="label-viewable-public-addnl">    
+            <input type="checkbox" id="viewable-public-addnl" class="checkbox-inline">
+              Viewable by public
+        </label><br><hr>
+        <div id="div-entry-text-addnl"><p id="entry-text-addnl"></p></div>
+    </div>
+</body>
+
+</html>

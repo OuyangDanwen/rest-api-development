@@ -1,26 +1,37 @@
+<!DOCTYPE html>
+<!-- Template from https://bootsnipp.com/snippets/featured/simple-login-form-bootsnipp-style-colorgraph -->
 <html>
-    <head>
-    </head>
-    <body>
-        <h1>Secret Diary Front End</h1>
-        <p>Requirements for the front end are as follows:</p>
-        <ul>
-            <li>Register a user</li>
-            <li>Login</li>
-            <li>Logout</li>
-            <li>Display all public diary entries</li>
-            <li>Display an authenticated user's diary entries</li>
-            <li>Create a new diary entry</li>
-            <li>Delete an existing diary entry</li>
-            <li>Toggle the permissions on an existing diary entry</li>
-        </ul>
-        <!-- the following is a demo on how you may display data retrieved from
-             the API
-        -->
-        <div id="demo_heartbeat">
-        </div>
-        <div id="demo_members">
-        </div>
-        <script src="./demo.js"></script>
-    </body>
+<head>
+	<meta charset="utf-8">
+	
+	<title>Login for Dairy Access</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css" id="bootstrap-css">
+	<link rel="stylesheet" href="css/index.css">
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery-3.3.1.min.js"></script>
+	<script src="js/purify.min.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/dairyInit.js"></script>
+</head>
+
+<body style="background-image:url(img/dairy-cow.jpg);  background-size: cover;" onload="destroyCookie()">
+<div class = "container">
+	<div class="wrapper">
+		<form action="" method="post" id="Login_Form" class="form-signin">       
+		    <h3 class="form-signin-heading">Please Sign In</h3>
+			<hr class="colorgraph"><br>
+			  
+			<input type="text" class="form-control" id="Username" placeholder="Username" required="" autofocus="" /><br/>
+			<input type="password" class="form-control" id="Password" placeholder="Password" required=""/>     		  
+			 
+			<button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit">Login</button>
+			<br/><br/>
+			<h4 style="text-align: center">New User? <a href="register.html">Register Here</a></h4>
+			<br/>
+			<h5 style="text-align: center"><a href="#" onclick="Meta();return false;">API Status</a></h5>
+		</form>		
+	</div>
+</div>
+</body>
+
 </html>

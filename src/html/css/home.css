@@ -1,0 +1,14 @@
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    background-color: white;
+    padding: 0px 0;
+    font-size: 16px;
+    border-radius: 50%;
+    border-color: black;
+}
+
+.jqueryDialogNoTitle .ui-dialog-titlebar { 
+    display: none; 
+}
