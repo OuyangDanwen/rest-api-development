@@ -133,21 +133,22 @@ The frontend is designed using HTML, Bootstrap 4 and JavaScript (jQuery 3.3.1).
 
 #### Question 2: Are there any security considerations your team thought about?
 
-We have identified the following security considerations, however it had been stated in the assignment brief that there is no need to implement the actual security measures to counter these issues.
+We had identified the following security considerations, however it had been stated in the assignment brief that there is no need to implement the actual security measures to counter these issues.
 
 Implemented:
 - Password hashing using bcrypt
-- Client-side XSS sanitiser using DOMPurify
+- Client-side XSS sanitisation using DOMPurify
 
 Considered but not implemented:
 - JWT for better management of the authentication token
+- Basic Auth tokens to prevent direct access to the API endpoints
 - Enhanced challenge/response password authentication to prevent login timing attacks
 - CSRF tokens
 - Server-side XSS sanitisation
 
 #### Question 3: Are there any improvements you would make to the API specification to improve the security of the web application?
 
-
+Include a Basic Auth token to be sent along with every RESTful API call; this token will be generated upon login and subsequently validated on the server-side. This prevents direct access to the API endpoints (without the need for a user login), which otherwise represents a potential information leak.
 
 #### Question 4: Are there any additional features you would like to highlight?
 
@@ -163,6 +164,8 @@ Our usage of DOMPurify provides client-side sanitisation for our web app. Howeve
 
 #### Feedback: Is there any other feedback you would like to give?
 
+Logging should be done on the server-side to track all the significant actions made by all the users of the web app.
+
 ### Declaration
 
 #### Please declare your individual contributions to the assignment:
@@ -173,6 +176,7 @@ Our usage of DOMPurify provides client-side sanitisation for our web app. Howeve
 2. Choo Rui Bin
   - Wrote the front-end code
   - Integrated the RESTful API into the front-end
+  - Wrote the documentation
 3. Ouyang Danwen
   - Designed the database schema
   - Wrote the back-end code
