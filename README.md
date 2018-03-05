@@ -137,11 +137,10 @@ We have identified the following security considerations, however it had been st
 
 Implemented:
 - Password hashing using bcrypt
-- Ensuring that private diary entries cannot be viewed by the public
 - Client-side XSS sanitiser using DOMPurify
 
 Considered but not implemented:
-- JWT for better management of authentication token
+- JWT for better management of the authentication token
 - Enhanced challenge/response password authentication to prevent login timing attacks
 - CSRF tokens
 - Server-side XSS sanitisation
