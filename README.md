@@ -76,7 +76,7 @@ On a different window:
 
 ```
 curl http://localhost:80
-curl  http://localhost:8080
+curl http://localhost:8080
 ```
 
 If a response is received, you're good to go.
@@ -128,16 +128,23 @@ Please fill out this section with details relevant to your team.
 
 #### Question 1: Briefly describe the web technology stack used in your implementation.
 
-The web framework is written in Python Flask that connects to a MongoDB database and the web server is hosted on Apache. The frontend is designed using HTML, Bootstrap CSS and JavaScript (jQuery).
+The web framework is written in Python Flask that connects to a MongoDB database and the web server is hosted on Apache.
+The frontend is designed using HTML, Bootstrap 4 and JavaScript (jQuery 3.3.1).
 
 #### Question 2: Are there any security considerations your team thought about?
 
-We have identified these security issues, however it had been stated in the assignment brief that there is no need to implement the actual security measures to counter these issues.
-- Cookie management
-- Replay attacks
-- XSS and CSRF attacks
-- Timing attacks
+We have identified the following security considerations, however it had been stated in the assignment brief that there is no need to implement the actual security measures to counter these issues.
+
+Implemented:
+- Password hashing using bcrypt
 - Ensuring that private diary entries cannot be viewed by the public
+- Client-side XSS sanitiser using DOMPurify
+
+Considered but not implemented:
+- JWT for better management of authentication token
+- Enhanced challenge/response password authentication to prevent login timing attacks
+- CSRF tokens
+- Server-side XSS sanitisation
 
 #### Question 3: Are there any improvements you would make to the API specification to improve the security of the web application?
 
@@ -145,11 +152,13 @@ We have identified these security issues, however it had been stated in the assi
 
 #### Question 4: Are there any additional features you would like to highlight?
 
-The generated cookie has an expiry time of 2 hours to reduce the possibility of replay attacks.
+The generated cookie has an expiry time of 2 hours to reduce the likelihood of replay attacks.
 
 #### Question 5: Is your web application vulnerable? If yes, how and why? If not, what measures did you take to secure it?
 
 One potential weakness is in the cookie management - currently we are still using the default JavaScript cookie functions. A better implementation would be to use JWT, however it was assured that we would not have to do its implementation in this current assignment.
+
+Our usage of DOMPurify provides client-side sanitisation for our web app. However, it is not a foolproof way. For a more rigorous defense, server-side sanitisation should be employed as well.
 
 #### Feedback: Is there any other feedback you would like to give?
 
